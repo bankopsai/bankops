@@ -13,3 +13,4 @@ export { Units, EMU_PER_INCH, EMU_PER_POINT } from "./units.js";
 export { LINE_SPACING } from "./defaults.js";
 export * from "./charts/chart-options.js";
 export { buildPptxChartOption } from "./charts/pptxchart-options.js";
+export { fitTitle, isNumericColumn, type TitleFit, type FitTitleOptions } from "./fit.js";

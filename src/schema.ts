@@ -5,6 +5,7 @@
 
 import { z } from "zod";
 import type { DeckJson } from "./types.js";
+import { isNumericColumn } from "./fit.js";
 
 // ---- Primitives ----
 
@@ -600,6 +601,18 @@ function lintNode(node: any, path: string, depth: number, warnings: DeckIssue[],
  *   slide with `content` or `children` but no `body`      -> wrapped in body
  *   "bulletList" content type                             -> text with bullet runs
  */
+/** Banking convention: numeric columns are right-aligned. Applied only when no alignment was given. */
+function alignNumericColumns(data: any, path: string, note: (p: string, m: string) => void): void {
+  if (data.colAlign || data.align) return;
+  const rows: any[][] = data.rows.filter((r: any) => Array.isArray(r));
+  const ncols = Math.max(Array.isArray(data.headers) ? data.headers.length : 0, ...rows.map((r) => r.length));
+  if (ncols < 2) return;
+  const colAlign = Array.from({ length: ncols }, (_, i) => (isNumericColumn(rows.map((r) => r[i])) ? "r" : "l"));
+  if (!colAlign.includes("r")) return;
+  data.colAlign = colAlign;
+  note(path, `numeric columns right-aligned (colAlign: ${JSON.stringify(colAlign)})`);
+}
+
 export function normalizeDeck(input: unknown, notes: DeckIssue[] = []): unknown {
   if (!input || typeof input !== "object" || Array.isArray(input)) return input;
   const deck: any = JSON.parse(JSON.stringify(input));
@@ -641,11 +654,13 @@ export function normalizeDeck(input: unknown, notes: DeckIssue[] = []): unknown 
       const h = headers ?? columns;
       if (Array.isArray(h)) data.headers = h.map(String);
       for (const [k, v] of Object.entries({ colWidths, colAlign, align, rowHeight, headerHeight, fontSize, headerFontSize, summaryRows, verticalHeaders })) if (v !== undefined) data[k] = v;
+      alignNumericColumns(data, `${path}.data`, note);
       return { ...rest, data };
     }
     if (c.type === "table" && c.data && Array.isArray(c.data.rows)) {
       if (Array.isArray(c.data.columns) && !c.data.headers) { c.data.headers = c.data.columns.map(String); delete c.data.columns; note(`${path}.data`, "columns became headers"); }
       c.data.rows = c.data.rows.map((r: any) => (Array.isArray(r) ? r.map((cell: any) => (cell != null && typeof cell !== "object" ? String(cell) : cell)) : r));
+      alignNumericColumns(c.data, `${path}.data`, note);
       return c;
     }
     if (c.type === "statGrid" && Array.isArray(c.items)) {

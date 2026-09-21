@@ -6,6 +6,7 @@ import LayoutAnalyzer from "./pptx/layout-analyzer.js";
 import LC from "./pptx/layout-catalog.js";
 import SlideLayout from "./layout.js";
 import Defaults from "./defaults.js";
+import { fitTitle } from "./fit.js";
 import SlideStyle from "./style.js";
 import { convertToNative } from "./charts/chart-to-native.js";
 import ChartGenerator from "./charts/chart-generator.js";
@@ -2590,10 +2591,11 @@ class SlideBuilder {
   // Describe slides as nested rows/columns (like MUI Grid), compute positions automatically.
 
   // Create a SlideLayout configured with this builder's dimensions and style
-  _createLayout(slideMargin?: number) {
+  _createLayout(slideMargin?: number, titleFontSizePt?: number, titleLines?: number) {
     const s = this._style;
     const labelH = s.sectionLabel.fontSize / 100 * 914400 / 72 * 1.6;
-    const titleH = s.mainTitle.fontSize / 100 * 914400 / 72 * 1.6;
+    const titlePt = titleFontSizePt || s.mainTitle.fontSize / 100;
+    const titleH = titlePt * 914400 / 72 * 1.6 * (titleLines || 1);
 
     // Subheader height = font size in inches + small padding
     const subFontPt = (s.bodyText.fontSize || 1050) / 100; // hundredths of pt → pt
@@ -2620,7 +2622,12 @@ class SlideBuilder {
     const slide = new DM.Slide(this.pres.slides.length + 1);
     slide.background = new DM.Fill('solid', { color: this._style.slide.background });
 
-    const layout = this._createLayout(spec && spec.margin);
+    // Fit the title: shrink before wrapping, and reserve a second line when it still wraps.
+    const marginIn = spec && spec.margin != null ? spec.margin : this._marginLeft() / 914400;
+    const fit = spec.title
+      ? fitTitle({ text: spec.title, fontSizePt: this._style.mainTitle.fontSize / 100, font: this._style.mainTitle.font, widthInches: this._slideW() / 914400 - 2 * marginIn })
+      : null;
+    const layout = this._createLayout(spec && spec.margin, fit?.fontSizePt, fit?.lines);
     const tree = layout.compute(spec);
 
     // Render section label
@@ -2649,7 +2656,7 @@ class SlideBuilder {
         'Title', spec.title,
         { x: tb.x, y: tb.y, cx: tb.cx, cy: tb.cy },
         {
-          fontSize: s.mainTitle.fontSize,
+          fontSize: fit ? Math.round(fit.fontSizePt * 100) : s.mainTitle.fontSize,
           bold: s.mainTitle.bold,
           color: s.mainTitle.color,
           fontFamily: s.mainTitle.font,
