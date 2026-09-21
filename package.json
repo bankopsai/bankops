@@ -1,6 +1,6 @@
 {
   "name": "bankops",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Deck engine for AI agents: turn deck JSON into investment-banking-grade PPTX. 12-column grid layout, native charts, text-fit budgets. Free for noncommercial use; commercial license required.",
   "type": "module",
   "main": "dist/index.js",
@@ -80,7 +80,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bankops-ai/bankops.git"
+    "url": "git+https://github.com/bankopsai/bankops.git"
   },
-  "homepage": "https://bankops.ai"
+  "homepage": "https://bankops.ai",
+  "bugs": {
+    "url": "https://github.com/bankopsai/bankops/issues"
+  }
 }
