@@ -24,6 +24,8 @@ export interface RenderOptions {
   basePath?: string;
   /** Allow fetching image URLs and Iconify icons. Default true. */
   network?: boolean;
+  /** Allow `path` images read from disk under basePath. Default true; hosted services set false. */
+  allowLocalFiles?: boolean;
   /** Per-request timeout for network fetches, ms. Default 15000. */
   timeoutMs?: number;
   /** Supplies bytes for images that need generation or search, and for logos/icons. */
@@ -164,6 +166,7 @@ export async function renderDeck(input: DeckJson | unknown, options: RenderOptio
 
   const ctx: ResolverContext = {
     basePath: options.basePath || process.cwd(),
+    allowLocalFiles: options.allowLocalFiles !== false,
     network: options.network !== false,
     timeoutMs: options.timeoutMs || 15000,
     resolveImage: options.resolveImage,

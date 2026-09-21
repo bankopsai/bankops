@@ -84,11 +84,21 @@ export interface McpServerOptions {
   resolveImage?: RenderOptions["resolveImage"];
   /** Called after a successful render in hosted mode to publish the deck; returns a URL. */
   share?: (deck: DeckJson, pptx: Buffer) => Promise<string>;
+  /** Write the .pptx to disk (default true). Hosted deployments set false and rely on `share`. */
+  writeFiles?: boolean;
+  /** Allow `path` images from disk (default true). Hosted deployments set false. */
+  allowLocalFiles?: boolean;
+  /** Extra tools to register (hosted deployments add search/fetch). */
+  extend?: (server: McpServer) => void;
 }
 
 export function createMcpServer(opts: McpServerOptions = {}): McpServer {
-  const server = new McpServer({ name: "bankops", version: VERSION });
+  const server = new McpServer({ name: "bankops", version: VERSION }, {
+    instructions: "bankops renders deck JSON into investment-banking-grade PowerPoint files. Start with bankops_guide, write the deck JSON, bankops_validate it, fit copy to the budgets from bankops_annotate, then bankops_render and give the user the file or link.",
+  });
   const basePath = opts.basePath || process.cwd();
+  const writeFiles = opts.writeFiles !== false;
+  const allowLocalFiles = opts.allowLocalFiles !== false;
 
   server.registerTool("bankops_guide", {
     title: "How to build a deck with bankops",
@@ -135,7 +145,9 @@ export function createMcpServer(opts: McpServerOptions = {}): McpServer {
 
   server.registerTool("bankops_render", {
     title: "Render to PPTX",
-    description: "Render validated deck JSON to a .pptx file. Returns the file path, slide count and any warnings (missing images, skipped icons). Call bankops_validate and bankops_annotate first; a deck with validation errors is rejected with the same { path, message, fix } list.",
+    description: writeFiles
+      ? "Render validated deck JSON to a .pptx file. Returns the file path, slide count and any warnings (missing images, skipped icons). Call bankops_validate and bankops_annotate first; a deck with validation errors is rejected with the same { path, message, fix } list."
+      : "Render validated deck JSON and publish it. Returns a url the user opens to view and download the PowerPoint, plus slide count and warnings. Give the url to the user verbatim. Call bankops_validate and bankops_annotate first; a deck with validation errors is rejected with the same { path, message, fix } list.",
     inputSchema: {
       deck: deckArg,
       output_path: z.string().optional().describe("Where to write the .pptx (default: <title>.pptx in the working directory)"),
@@ -143,13 +155,17 @@ export function createMcpServer(opts: McpServerOptions = {}): McpServer {
       theme_tokens: themeArg,
     },
   }, async ({ deck, output_path, style, theme_tokens }) => guard(async () => {
-    const r = await renderDeck(deck, { basePath, style: style as any, themeTokens: theme_tokens as any, resolveImage: opts.resolveImage });
+    const r = await renderDeck(deck, { basePath, allowLocalFiles, style: style as any, themeTokens: theme_tokens as any, resolveImage: opts.resolveImage });
     const title = String((deck as any).title || "deck").replace(/[^a-z0-9_\-. ]/gi, "_").trim() || "deck";
-    const out = path.resolve(basePath, output_path || `${title}.pptx`);
-    fs.mkdirSync(path.dirname(out), { recursive: true });
-    fs.writeFileSync(out, r.buffer);
+    let out: string | null = null;
+    if (writeFiles) {
+      out = path.resolve(basePath, output_path || `${title}.pptx`);
+      fs.mkdirSync(path.dirname(out), { recursive: true });
+      fs.writeFileSync(out, r.buffer);
+    }
     const url = opts.share ? await opts.share(deck as unknown as DeckJson, r.buffer) : null;
-    return json({ ok: true, path: out, url, slides: r.slides, bytes: r.buffer.length, warnings: r.warnings, next: r.warnings.length ? "fix the warnings or accept them, then hand the file to the user" : "hand the file to the user" });
+    const deliverable = url ? "give the user the url" : "hand the file to the user";
+    return json({ ok: true, path: out, url, slides: r.slides, bytes: r.buffer.length, warnings: r.warnings, next: r.warnings.length ? `fix the warnings or accept them, then ${deliverable}` : deliverable });
   }));
 
   server.registerTool("bankops_preview", {
@@ -159,9 +175,20 @@ export function createMcpServer(opts: McpServerOptions = {}): McpServer {
   }, async ({ deck, slide, style, theme_tokens, width }) => guard(async () => {
     const soffice = await findSoffice();
     if (!soffice) return json({ ok: false, errors: [{ path: "preview", message: "LibreOffice (soffice) is not installed", fix: "install LibreOffice, or skip previews and rely on bankops_annotate budgets" }] }, true);
-    const { png, warnings } = await renderSlidePng(deck as unknown as DeckJson, slide - 1, { basePath, style: style as any, themeTokens: theme_tokens as any, resolveImage: opts.resolveImage, width });
+    const { png, warnings } = await renderSlidePng(deck as unknown as DeckJson, slide - 1, { basePath, allowLocalFiles, style: style as any, themeTokens: theme_tokens as any, resolveImage: opts.resolveImage, width });
     return { content: [{ type: "image", data: png.toString("base64"), mimeType: "image/png" }, { type: "text", text: JSON.stringify({ ok: true, slide, warnings }) }] };
   }));
 
+  opts.extend?.(server);
   return server;
+}
+
+/** The skill sections, for hosted search/fetch tools. */
+export function skillSections(): { id: string; title: string; text: string }[] {
+  return [
+    { id: "skill", title: "bankops skill: workflow and rules", text: readSkill("skill") },
+    { id: "format", title: "Deck format reference", text: readSkill("format") },
+    { id: "recipes", title: "Investment-banking layout recipes", text: readSkill("recipes") },
+    { id: "errors", title: "Validation errors and warnings", text: readSkill("errors") },
+  ];
 }

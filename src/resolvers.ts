@@ -28,6 +28,8 @@ export type ImageResolver = (req: ImageRequest) => Promise<Buffer | null>;
 
 export interface ResolverContext {
   basePath: string;
+  /** Allow reading images from the local filesystem via `path` (false for hosted services). */
+  allowLocalFiles: boolean;
   network: boolean;
   timeoutMs: number;
   resolveImage?: ImageResolver;
@@ -36,7 +38,9 @@ export interface ResolverContext {
 
 /** Local file relative to basePath. */
 export function loadLocalImage(p: string, ctx: ResolverContext): Buffer | null {
+  if (!ctx.allowLocalFiles) { ctx.warn(`local image paths are disabled here; use a url instead of path "${p}"`); return null; }
   const resolved = path.resolve(ctx.basePath, p);
+  if (!resolved.startsWith(path.resolve(ctx.basePath) + path.sep) && resolved !== path.resolve(ctx.basePath)) { ctx.warn(`image path escapes basePath: ${p}`); return null; }
   if (!fs.existsSync(resolved)) { ctx.warn(`image not found: ${resolved}`); return null; }
   return fs.readFileSync(resolved);
 }

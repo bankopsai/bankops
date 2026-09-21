@@ -14,3 +14,6 @@ export { svgToPng, toPng, hasSharp, MissingDependencyError } from "./raster.js";
 export { default as PptxParser } from "./pptx/pptx-parser.js";
 export { default as PptxWriter } from "./pptx/pptx-writer.js";
 export { default as DocumentModel } from "./pptx/document-model.js";
+export { createMcpServer, skillSections, budgetReport, type McpServerOptions } from "./mcp/server.js";
+export { renderSlidePng, pptxToPng, findSoffice } from "./preview.js";
+export { createHandler as createServiceHandler, startServer as startService, type ServeOptions } from "./server/server.js";

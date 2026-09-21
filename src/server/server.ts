@@ -82,7 +82,7 @@ export function createHandler(opts: ServeOptions = {}) {
       }
 
       if (url.pathname === "/render") {
-        const options: RenderOptions = { network: true, resolveImage: opts.resolveImage, components: { ...(opts.components || {}) } };
+        const options: RenderOptions = { network: true, allowLocalFiles: false, resolveImage: opts.resolveImage, components: { ...(opts.components || {}) } };
         const reqOpts = body?.options || {};
         for (const k of HTTP_RENDER_OPTIONS) {
           if (reqOpts[k] !== undefined) {
@@ -104,7 +104,7 @@ export function createHandler(opts: ServeOptions = {}) {
 
       if (url.pathname === "/preview") {
         const slide = Number(body?.slide || 1);
-        const options: RenderOptions = { network: true, resolveImage: opts.resolveImage, components: { ...(opts.components || {}) } };
+        const options: RenderOptions = { network: true, allowLocalFiles: false, resolveImage: opts.resolveImage, components: { ...(opts.components || {}) } };
         const reqOpts = body?.options || {};
         for (const k of HTTP_RENDER_OPTIONS) if (reqOpts[k] !== undefined && k !== "components") (options as any)[k] = reqOpts[k];
         const { png, warnings } = await renderSlidePng(deck, slide - 1, { ...options, width: Number(body?.width) || 960 });
