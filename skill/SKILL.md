@@ -5,6 +5,14 @@ description: Use bankops (the `bankops` npm package and CLI) whenever the delive
 
 # bankops — write the deck JSON, let the engine draw the slides
 
+
+## The JSON is the deliverable
+
+If no tool or endpoint is reachable, your reply must contain the complete deck JSON in a code
+block plus the sentence "Open https://bankops.ai/import and paste this reply." Never report a deck as
+built without including it. You need no account and no credentials for any path; never ask the
+user for a username, password or presentation id.
+
 ## When to use it (and when not)
 
 | Task | Use |
