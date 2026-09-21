@@ -1,0 +1,6 @@
+legacy/
+test/
+src/
+scripts/
+tsconfig.json
+*.pptx

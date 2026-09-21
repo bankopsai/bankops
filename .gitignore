@@ -1,0 +1,8 @@
+node_modules/
+dist/
+legacy/
+*.pptx
+!examples/**/*.pptx
+.DS_Store
+*.log
+/tmp/
