@@ -1,0 +1,143 @@
+{
+  "title": "Payments Infrastructure Software — Market Overview",
+  "style": "corporate",
+  "slides": [
+    {
+      "title": "Payments Software: Market Overview",
+      "sectionLabel": "Market Overview",
+      "footer": "Sources: Harbor Point Advisors sector research, company filings, industry surveys. Figures are illustrative estimates.",
+      "body": {
+        "direction": "col",
+        "gap": 0.12,
+        "children": [
+          {
+            "span": 3,
+            "content": {
+              "type": "statGrid",
+              "items": [
+                {
+                  "value": "$48bn",
+                  "label": "Global market size (2026E)",
+                  "sublabel": "Software spend, ex-processing"
+                },
+                {
+                  "value": "14%",
+                  "label": "Market CAGR 2023-28E",
+                  "sublabel": "Versus 6% for core banking"
+                },
+                {
+                  "value": "128",
+                  "label": "M&A deals in 2025",
+                  "sublabel": "Up from 96 in 2024"
+                },
+                {
+                  "value": "6.8x",
+                  "label": "Median EV / NTM revenue",
+                  "sublabel": "Public peers, Jun 2026"
+                }
+              ]
+            }
+          },
+          {
+            "span": 9,
+            "direction": "row",
+            "gap": 0.12,
+            "children": [
+              {
+                "span": 4,
+                "header": "Market Size ($bn)",
+                "content": {
+                  "type": "pptxChart",
+                  "chartType": "bar",
+                  "series": [
+                    {
+                      "name": "Market size ($bn)",
+                      "labels": ["2023", "2024", "2025", "2026E", "2027E", "2028E"],
+                      "values": [32, 36, 42, 48, 55, 62]
+                    }
+                  ],
+                  "showLegend": false,
+                  "showValue": true,
+                  "dataLabelFormatCode": "0",
+                  "dataLabelFontSize": 9,
+                  "fontSize": 9,
+                  "chartColors": ["#4472C4"],
+                  "valAxisHidden": true,
+                  "valGridLine": {
+                    "style": "none"
+                  },
+                  "gapWidthPct": 60
+                }
+              },
+              {
+                "span": 4,
+                "header": "Cloud Deployment (%)",
+                "content": {
+                  "type": "chart",
+                  "chartType": "line",
+                  "categories": ["2021", "2022", "2023", "2024", "2025", "2026E"],
+                  "series": [
+                    {
+                      "name": "Mid-market banks",
+                      "data": [18, 24, 31, 40, 49, 57]
+                    },
+                    {
+                      "name": "Payment companies",
+                      "data": [41, 49, 58, 66, 73, 79]
+                    }
+                  ],
+                  "smooth": true,
+                  "gridBottom": 45,
+                  "gridLeft": 40,
+                  "valueSuffix": "%",
+                  "yMin": 0,
+                  "yMax": 100
+                }
+              },
+              {
+                "span": 4,
+                "header": "Key Trends",
+                "content": {
+                  "type": "text",
+                  "fontSize": 1100,
+                  "runs": [
+                    {
+                      "text": "Real-time rails",
+                      "bold": true,
+                      "bullet": true
+                    },
+                    {
+                      "text": "Instant payment volumes doubled since 2023, forcing ledger and reconciliation upgrades",
+                      "bullet": true,
+                      "bulletLevel": 1
+                    },
+                    {
+                      "text": "Core modernisation",
+                      "bold": true,
+                      "bullet": true
+                    },
+                    {
+                      "text": "Banks replace batch systems with API-first vendors; 60% cite legacy cost as the trigger",
+                      "bullet": true,
+                      "bulletLevel": 1
+                    },
+                    {
+                      "text": "Consolidation",
+                      "bold": true,
+                      "bullet": true
+                    },
+                    {
+                      "text": "Sponsors and strategics buying scaled platforms; median deal size up 30% in 2025",
+                      "bullet": true,
+                      "bulletLevel": 1
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -100,7 +100,7 @@ The package makes no AI or search calls. Images marked `source: "ai"` or `source
 
 ## Optional dependencies
 
-- `sharp` renders chart images, icons and SVG or WebP images. Without it, `chart` content falls back to nothing and a warning is emitted; use `pptxChart` (native) instead.
+- `sharp` renders chart images, icons and SVG or WebP images. Without it, `chart` content throws a `MissingDependencyError` that names the fix; icons and SVG or WebP images are skipped with a warning. Use `pptxChart` (native) if you cannot install sharp.
 - `pptxgenjs` produces native, editable charts for `pptxChart` content and `chart` content with `pptxExportMode: "nativeExcel"`.
 
 ## Render service

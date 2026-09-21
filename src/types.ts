@@ -214,7 +214,7 @@ export interface ChartContent {
   chartType: "bar" | "line" | "pie" | "combo" | "waterfall" | "scatter" | "gauge";
   title?: string;
   categories?: string[];
-  series?: { name?: string; data: number[] }[];
+  series?: { name?: string; data: (number | [number, number])[] }[];  // scatter uses [x, y] pairs
   items?: { name: string; value: number }[];
   bars?: { name?: string; data: number[] }[];
   lines?: { name?: string; data: number[] }[];

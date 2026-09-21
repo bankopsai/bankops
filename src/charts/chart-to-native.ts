@@ -209,7 +209,7 @@ function buildCategorySeries(content: ChartContent): { name: string; labels: str
   return (content.series || []).map((s) => ({
     name: s.name || 'Series',
     labels: categories.slice(),
-    values: (s.data || []).slice(),
+    values: (s.data || []).map((v) => (Array.isArray(v) ? v[1] : v)),
   }));
 }
 

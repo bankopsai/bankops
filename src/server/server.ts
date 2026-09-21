@@ -5,6 +5,7 @@
  *   POST /render     { deck, options? }  → application/vnd.openxmlformats-officedocument.presentationml.presentation
  *   POST /validate   { deck }            → ValidationResult
  *   POST /annotate   { deck, style? }    → { annotated }
+ *   POST /preview    { deck, slide, options? } → image/png of one slide (1-based; needs LibreOffice)
  *   GET  /schema                          → JSON Schema
  *   GET  /health                          → { ok, version }
  *
@@ -16,6 +17,7 @@ import http from "node:http";
 import { renderDeck, type RenderOptions } from "../render.js";
 import { validateDeck, deckJsonSchema, DeckValidationError } from "../schema.js";
 import { annotateDeck } from "../annotate.js";
+import { renderSlidePng } from "../preview.js";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
@@ -100,7 +102,19 @@ export function createHandler(opts: ServeOptions = {}) {
         return;
       }
 
-      return json(res, 404, { error: "not found", routes: ["POST /render", "POST /validate", "POST /annotate", "GET /schema", "GET /health"] });
+      if (url.pathname === "/preview") {
+        const slide = Number(body?.slide || 1);
+        const options: RenderOptions = { network: true, resolveImage: opts.resolveImage, components: { ...(opts.components || {}) } };
+        const reqOpts = body?.options || {};
+        for (const k of HTTP_RENDER_OPTIONS) if (reqOpts[k] !== undefined && k !== "components") (options as any)[k] = reqOpts[k];
+        const { png, warnings } = await renderSlidePng(deck, slide - 1, { ...options, width: Number(body?.width) || 960 });
+        res.writeHead(200, { "content-type": "image/png", "content-length": png.length, "x-bankops-warnings": String(warnings.length) });
+        res.end(png);
+        log(`preview slide ${slide} ${png.length}B ${Date.now() - started}ms`);
+        return;
+      }
+
+      return json(res, 404, { error: "not found", routes: ["POST /render", "POST /preview", "POST /validate", "POST /annotate", "GET /schema", "GET /health"] });
     } catch (e: any) {
       if (e instanceof DeckValidationError) return json(res, 422, { error: "invalid deck", errors: e.errors, warnings: e.warnings });
       log(`error ${url.pathname}: ${e?.message || e}`);

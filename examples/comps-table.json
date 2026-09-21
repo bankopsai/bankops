@@ -1,0 +1,68 @@
+{
+  "title": "Trading Comparables — Vertical SaaS",
+  "style": "corporate",
+  "slides": [
+    {
+      "title": "Trading Comparables: Software Peers",
+      "sectionLabel": "Valuation",
+      "footer": "Source: Market data as of 30 June 2026; fictional peer set for illustration. Mean and median exclude Ledgerline.",
+      "body": {
+        "direction": "col",
+        "gap": 0.12,
+        "children": [
+          {
+            "span": 8,
+            "header": "Selected Public Peers ($m, except multiples)",
+            "content": {
+              "type": "table",
+              "data": {
+                "headers": ["Company", "Mkt Cap", "EV", "EV / Rev FY26E", "EV / EBITDA FY26E", "Rev Growth", "EBITDA Margin"],
+                "rows": [
+                  ["Northbeam Software", "12,400", "11,850", "9.2x", "31.5x", "24%", "29%"],
+                  ["Ridgeline Financial Tech", "8,650", "9,120", "7.4x", "26.8x", "19%", "28%"],
+                  ["Cobalt Payments", "5,980", "5,420", "6.1x", "22.4x", "17%", "27%"],
+                  ["Stonegate Systems", "4,210", "4,760", "5.3x", "19.6x", "12%", "27%"],
+                  ["Larkspur Data", "3,140", "2,890", "6.8x", "35.2x", "28%", "19%"],
+                  ["Tidewater Ledger", "1,920", "2,050", "4.4x", "17.1x", "9%", "26%"],
+                  ["Median", "", "", "6.5x", "24.6x", "18%", "27%"],
+                  ["Mean", "", "", "6.5x", "25.4x", "18%", "26%"]
+                ],
+                "colWidths": [3.5, 1.5, 1.5, 1.5, 1.5, 1.25, 1.25],
+                "colAlign": ["l", "r", "r", "r", "r", "r", "r"],
+                "summaryRows": 2,
+                "rowHeight": 0.3,
+                "headerHeight": 0.4,
+                "fontSize": 1000,
+                "headerFontSize": 950
+              }
+            }
+          },
+          {
+            "span": 4,
+            "header": "EV / FY26E Revenue by Peer (x)",
+            "content": {
+              "type": "chart",
+              "chartType": "bar",
+              "categories": ["Northbeam", "Ridgeline", "Cobalt", "Stonegate", "Larkspur", "Tidewater"],
+              "series": [
+                {
+                  "name": "EV / Revenue",
+                  "data": [9.2, 7.4, 6.1, 5.3, 6.8, 4.4]
+                }
+              ],
+              "showBarValues": true,
+              "valueSuffix": "x",
+              "valueDecimals": 1,
+              "showYAxis": false,
+              "showSplitLine": false,
+              "gridTop": 18,
+              "gridBottom": 24,
+              "gridLeft": 12,
+              "gridRight": 12
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

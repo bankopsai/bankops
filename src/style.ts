@@ -474,6 +474,7 @@ export class SlideStyle {
   
     dark: {
       slide: { background: '#1a1a2e' },
+      title: { color: '#EAEAEA' },   // DEFAULT_STYLE.title.color is explicit slate, not cascaded: unreadable on the dark background
       colors: {
         primary: '#EAEAEA', secondary: '#A0A0A0', accent: '#E94560',
         darkFill: '#16213e', border: '#444444',

@@ -84,3 +84,8 @@ test("emits a JSON Schema with definitions", () => {
   assert.ok(s.properties.slides);
   assert.ok(JSON.stringify(s).includes("statGrid"));
 });
+
+test("scatter series accept [x, y] pairs", () => {
+  const r = validateDeck({ slides: [{ body: { content: { type: "chart", chartType: "scatter", series: [{ name: "Peers", data: [[1.2, 14], [2.5, 22]] }] } } }] });
+  assert.equal(r.ok, true, JSON.stringify(r.errors));
+});

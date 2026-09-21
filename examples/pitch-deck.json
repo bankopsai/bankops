@@ -1,0 +1,503 @@
+{
+  "title": "Project Ledger — Discussion Materials",
+  "style": "corporate",
+  "slides": [
+    {
+      "body": {
+        "direction": "col",
+        "gap": 0,
+        "children": [
+          {
+            "span": 4
+          },
+          {
+            "span": 2,
+            "content": {
+              "type": "text",
+              "text": "Project Ledger",
+              "fontSize": 4000,
+              "bold": true,
+              "align": "ctr",
+              "anchor": "b",
+              "color": "#405363"
+            }
+          },
+          {
+            "span": 1,
+            "content": {
+              "type": "text",
+              "text": "Discussion Materials for the Board of Ledgerline Technologies",
+              "fontSize": 1600,
+              "align": "ctr",
+              "anchor": "t",
+              "color": "#4472C4"
+            }
+          },
+          {
+            "span": 1,
+            "content": {
+              "type": "line",
+              "color": "#4472C4",
+              "width": 19050
+            }
+          },
+          {
+            "span": 1,
+            "content": {
+              "type": "text",
+              "text": "Harbor Point Advisors  |  September 2026  |  Strictly Private and Confidential",
+              "fontSize": 1100,
+              "align": "ctr",
+              "anchor": "t",
+              "color": "#666666"
+            }
+          },
+          {
+            "span": 3
+          }
+        ]
+      }
+    },
+    {
+      "body": {
+        "direction": "row",
+        "gap": 0,
+        "children": [
+          {
+            "span": 8,
+            "direction": "col",
+            "padding": 0.5,
+            "children": [
+              {
+                "span": 6,
+                "content": {
+                  "type": "text",
+                  "text": "01.",
+                  "font": "Arial Bold",
+                  "fontSize": 6400,
+                  "color": "#405363",
+                  "anchor": "b"
+                }
+              },
+              {
+                "span": 6,
+                "content": {
+                  "type": "text",
+                  "text": "INVESTMENT HIGHLIGHTS",
+                  "font": "Arial Bold",
+                  "fontSize": 2000,
+                  "color": "#4472C4",
+                  "anchor": "t"
+                }
+              }
+            ]
+          },
+          {
+            "span": 4,
+            "background": "#164556"
+          }
+        ]
+      }
+    },
+    {
+      "title": "Ledgerline at a Glance",
+      "sectionLabel": "Investment Highlights",
+      "footer": "Source: Management information, Harbor Point Advisors analysis. Illustrative figures.",
+      "body": {
+        "direction": "row",
+        "gap": 0.15,
+        "children": [
+          {
+            "span": 7,
+            "header": "Why Ledgerline",
+            "content": {
+              "type": "text",
+              "fontSize": 1200,
+              "runs": [
+                {
+                  "text": "Category leader in real-time ledger software",
+                  "bold": true,
+                  "bullet": true
+                },
+                {
+                  "text": "210 customers including 6 of the 20 largest US mid-market banks",
+                  "bullet": true,
+                  "bulletLevel": 1
+                },
+                {
+                  "text": "Durable, high-quality revenue",
+                  "bold": true,
+                  "bullet": true
+                },
+                {
+                  "text": "94% subscription; 118% net revenue retention; 98% gross retention",
+                  "bullet": true,
+                  "bulletLevel": 1
+                },
+                {
+                  "text": "Large and expanding addressable market",
+                  "bold": true,
+                  "bullet": true
+                },
+                {
+                  "text": "$48bn market growing 14% a year as instant payments force core upgrades",
+                  "bullet": true,
+                  "bulletLevel": 1
+                },
+                {
+                  "text": "Efficient growth",
+                  "bold": true,
+                  "bullet": true
+                },
+                {
+                  "text": "38% growth at a 22% EBITDA margin; free-cash-flow positive since FY24",
+                  "bullet": true,
+                  "bulletLevel": 1
+                },
+                {
+                  "text": "Multiple strategic and sponsor exit paths",
+                  "bold": true,
+                  "bullet": true
+                },
+                {
+                  "text": "Twelve credible acquirers identified; three have made inbound approaches",
+                  "bullet": true,
+                  "bulletLevel": 1
+                }
+              ]
+            }
+          },
+          {
+            "span": 5,
+            "header": "Key Metrics (FY26E)",
+            "content": {
+              "type": "statGrid",
+              "items": [
+                {
+                  "value": "$88m",
+                  "label": "Revenue",
+                  "sublabel": "+38% year on year"
+                },
+                {
+                  "value": "22%",
+                  "label": "EBITDA margin",
+                  "sublabel": "+5 pts year on year"
+                },
+                {
+                  "value": "118%",
+                  "label": "Net revenue retention",
+                  "sublabel": "Trailing twelve months"
+                },
+                {
+                  "value": "210",
+                  "label": "Customers",
+                  "sublabel": "Average ARR $420k"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "Financial Summary",
+      "sectionLabel": "Investment Highlights",
+      "footer": "Source: Audited accounts FY24A-FY25A; management plan FY26E-FY27E. $m; illustrative figures.",
+      "body": {
+        "direction": "row",
+        "gap": 0.15,
+        "children": [
+          {
+            "span": 7,
+            "header": "Revenue and EBITDA Margin",
+            "content": {
+              "type": "chart",
+              "chartType": "combo",
+              "categories": ["FY23A", "FY24A", "FY25A", "FY26E", "FY27E"],
+              "bars": [
+                {
+                  "name": "Revenue ($m)",
+                  "data": [34, 46, 64, 88, 119]
+                }
+              ],
+              "lines": [
+                {
+                  "name": "EBITDA margin (%)",
+                  "data": [4, 11, 17, 22, 26]
+                }
+              ],
+              "dualAxis": true,
+              "gridBottom": 45,
+              "yMin": 0,
+              "y2Min": 0,
+              "y2Max": 40,
+              "y2ValueSuffix": "%"
+            }
+          },
+          {
+            "span": 5,
+            "header": "Summary Financials ($m)",
+            "content": {
+              "type": "table",
+              "data": {
+                "headers": ["", "FY24A", "FY25A", "FY26E", "FY27E"],
+                "rows": [
+                  ["Revenue", "46", "64", "88", "119"],
+                  ["Growth", "35%", "39%", "38%", "35%"],
+                  ["Gross profit", "35", "50", "70", "96"],
+                  ["Gross margin", "76%", "78%", "80%", "81%"],
+                  ["EBITDA", "5", "11", "19", "31"],
+                  ["EBITDA margin", "11%", "17%", "22%", "26%"],
+                  ["Free cash flow", "2", "7", "14", "25"]
+                ],
+                "colWidths": [4, 2, 2, 2, 2],
+                "colAlign": ["l", "r", "r", "r", "r"],
+                "rowHeight": 0.36,
+                "headerHeight": 0.34,
+                "fontSize": 1000,
+                "headerFontSize": 1000
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "Proposed Transaction Timeline",
+      "sectionLabel": "Process",
+      "footer": "Timeline is indicative and subject to board approval and buyer diligence requirements.",
+      "body": {
+        "direction": "col",
+        "gap": 0.15,
+        "children": [
+          {
+            "span": 8,
+            "content": {
+              "type": "timeline",
+              "dateFormat": "month-year",
+              "events": [
+                {
+                  "date": "2026-10-05",
+                  "name": "Launch",
+                  "detail": "Board approval; teaser and NDA to 24 parties"
+                },
+                {
+                  "date": "2026-11-09",
+                  "name": "First round",
+                  "detail": "CIM and management video; non-binding bids due"
+                },
+                {
+                  "date": "2026-12-07",
+                  "name": "Second round",
+                  "detail": "Management presentations; data room and site visits"
+                },
+                {
+                  "date": "2027-01-25",
+                  "name": "Final bids",
+                  "detail": "Binding offers with marked SPA and financing letters"
+                },
+                {
+                  "date": "2027-02-15",
+                  "name": "Signing",
+                  "detail": "Exclusivity, confirmatory diligence, signing"
+                },
+                {
+                  "date": "2027-03-31",
+                  "name": "Closing",
+                  "detail": "Regulatory clearances and completion"
+                }
+              ]
+            }
+          },
+          {
+            "span": 4,
+            "header": "Preparation Workstreams",
+            "content": {
+              "type": "cardGrid",
+              "items": [
+                {
+                  "title": "Financial",
+                  "lines": ["Quality of earnings report", "FY27E plan and bridge"]
+                },
+                {
+                  "title": "Commercial",
+                  "lines": ["Customer reference calls", "Market study by third party"]
+                },
+                {
+                  "title": "Legal",
+                  "lines": ["Vendor due diligence report", "Draft SPA and disclosure letter"]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "Harbor Point: Relevant Experience",
+      "sectionLabel": "Credentials",
+      "footer": "Selected fintech and financial software transactions since 2022. All names fictional.",
+      "body": {
+        "direction": "row",
+        "gap": 0.15,
+        "children": [
+          {
+            "span": 5,
+            "header": "Harbor Point by the Numbers",
+            "content": {
+              "type": "statGrid",
+              "items": [
+                {
+                  "value": "$48bn",
+                  "label": "Transaction value advised",
+                  "sublabel": "Since 2005"
+                },
+                {
+                  "value": "320+",
+                  "label": "Completed transactions",
+                  "sublabel": "M&A and capital raises"
+                },
+                {
+                  "value": "42",
+                  "label": "Fintech deals",
+                  "sublabel": "Since 2022"
+                },
+                {
+                  "value": "#3",
+                  "label": "Fintech M&A adviser",
+                  "sublabel": "2025 league table, deals under $2bn"
+                }
+              ]
+            }
+          },
+          {
+            "span": 7,
+            "header": "Selected Financial Software Transactions",
+            "content": {
+              "type": "cardGrid",
+              "items": [
+                {
+                  "title": "Cobalt Payments",
+                  "lines": ["Sale to a strategic acquirer", "$1.4bn | March 2026"]
+                },
+                {
+                  "title": "Larkspur Data",
+                  "lines": ["Growth investment from Bluewater", "$320m | November 2025"]
+                },
+                {
+                  "title": "Tidewater Ledger",
+                  "lines": ["Sale to Granite Peak Capital", "$780m | June 2025"]
+                },
+                {
+                  "title": "Stonegate Systems",
+                  "lines": ["Carve-out of reporting division", "$510m | January 2025"]
+                },
+                {
+                  "title": "Northbeam Software",
+                  "lines": ["Acquisition of Brightwater", "$950m | September 2024"]
+                },
+                {
+                  "title": "Ridgeline Financial",
+                  "lines": ["Initial public offering", "$2.1bn | May 2024"]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "Next Steps",
+      "sectionLabel": "Process",
+      "footer": "Harbor Point Advisors | Strictly Private and Confidential",
+      "body": {
+        "direction": "col",
+        "gap": 0.15,
+        "children": [
+          {
+            "span": 7,
+            "direction": "row",
+            "gap": 0.2,
+            "children": [
+              {
+                "span": 3,
+                "content": {
+                  "type": "icon",
+                  "name": "mdi:clipboard-check-outline",
+                  "color": "#4472C4",
+                  "size": 70
+                }
+              },
+              {
+                "span": 9,
+                "header": "Proposed Actions for the Next Four Weeks",
+                "content": {
+                  "type": "text",
+                  "fontSize": 1300,
+                  "runs": [
+                    {
+                      "text": "Board confirms mandate and process objectives",
+                      "bold": true,
+                      "bullet": true
+                    },
+                    {
+                      "text": "Agree valuation guidance and preferred buyer universe",
+                      "bullet": true,
+                      "bulletLevel": 1
+                    },
+                    {
+                      "text": "Finalise FY27E plan and vendor diligence scope",
+                      "bold": true,
+                      "bullet": true
+                    },
+                    {
+                      "text": "Quality of earnings kick-off with the finance team",
+                      "bullet": true,
+                      "bulletLevel": 1
+                    },
+                    {
+                      "text": "Prepare teaser, CIM and management presentation",
+                      "bold": true,
+                      "bullet": true
+                    },
+                    {
+                      "text": "Draft materials circulated to the board for review by 25 September",
+                      "bullet": true,
+                      "bulletLevel": 1
+                    },
+                    {
+                      "text": "Launch outreach to 24 parties in the first week of October",
+                      "bold": true,
+                      "bullet": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "span": 5,
+            "header": "Harbor Point Deal Team",
+            "content": {
+              "type": "cardGrid",
+              "items": [
+                {
+                  "title": "Elena Marsh",
+                  "lines": ["Managing Director, Fintech", "Day-to-day senior coverage"]
+                },
+                {
+                  "title": "Rafael Ortega",
+                  "lines": ["Director", "Process and buyer outreach"]
+                },
+                {
+                  "title": "Jun Nakamura",
+                  "lines": ["Vice President", "Financial model and materials"]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

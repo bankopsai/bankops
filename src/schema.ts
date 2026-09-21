@@ -138,7 +138,8 @@ export const IconContentSchema = z.object({
   objectFit: z.enum(["contain", "cover", "fill"]).optional(),
 });
 
-const series = z.object({ name: z.string().optional(), data: z.array(z.number()) });
+/** Series values: numbers, or [x, y] pairs for scatter charts. */
+const series = z.object({ name: z.string().optional(), data: z.array(z.union([z.number(), z.tuple([z.number(), z.number()])])) });
 const indexColorMap = z.record(z.string(), hexColor);
 
 export const ChartContentSchema = z.object({

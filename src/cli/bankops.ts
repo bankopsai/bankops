@@ -28,7 +28,9 @@ Usage:
   bankops schema                                    Print the JSON Schema for deck files
   bankops presets                                   List style presets and layout presets
   bankops skill [--install <dir>]                   Print the agent skill, or install it into <dir>
+  bankops preview <deck.json> <n> [out.png]         Render slide n (1-based) to PNG via LibreOffice
   bankops serve [--port 5490] [--host 127.0.0.1]    Run the render service (HTTP)
+  bankops mcp                                       Run the MCP server (stdio)
 
 Render options:
   --style <preset|json>   Override deck.style (corporate | minimal | dark | warm, or a JSON object)
@@ -149,6 +151,28 @@ async function main(): Promise<void> {
       } else {
         process.stdout.write(fs.readFileSync(path.join(skillDir, "SKILL.md"), "utf8"));
       }
+      return;
+    }
+    case "preview": {
+      const input = positional[0];
+      const n = parseInt(positional[1] || "1", 10);
+      if (!input || !Number.isFinite(n)) fail("preview needs a deck JSON path and a 1-based slide number");
+      const { renderSlidePng } = await import("../preview.js");
+      const deck = readJson(input) as any;
+      const out = positional[2] || input.replace(/\.json$/i, "") + `-slide${n}.png`;
+      try {
+        const { png, warnings } = await renderSlidePng(deck, n - 1, { basePath: path.dirname(path.resolve(input)), onWarning: (m) => process.stderr.write(`warning: ${m}\n`) });
+        fs.writeFileSync(out, png);
+        process.stdout.write(`${out}${warnings.length ? ` (${warnings.length} warnings)` : ""}\n`);
+      } catch (e: any) {
+        if (e instanceof DeckValidationError) { printIssues("error", e.errors); process.exit(1); }
+        fail(e?.message || String(e));
+      }
+      return;
+    }
+    case "mcp": {
+      const mod = await import("../mcp/main.js");
+      await mod.main();
       return;
     }
     case "serve": {

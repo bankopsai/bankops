@@ -1,0 +1,244 @@
+{
+  "title": "Project Aurora — Value Creation Summary",
+  "style": "dark",
+  "slides": [
+    {
+      "body": {
+        "direction": "col",
+        "gap": 0,
+        "children": [
+          {
+            "span": 4
+          },
+          {
+            "span": 2,
+            "content": {
+              "type": "text",
+              "text": "Project Aurora",
+              "fontSize": 4000,
+              "bold": true,
+              "align": "ctr",
+              "anchor": "b",
+              "color": "#FFFFFF"
+            }
+          },
+          {
+            "span": 1,
+            "content": {
+              "type": "text",
+              "text": "Value Creation Summary",
+              "fontSize": 1800,
+              "align": "ctr",
+              "anchor": "t",
+              "color": "#E94560"
+            }
+          },
+          {
+            "span": 1,
+            "content": {
+              "type": "line",
+              "color": "#E94560",
+              "width": 19050
+            }
+          },
+          {
+            "span": 1,
+            "content": {
+              "type": "text",
+              "text": "Harbor Point Advisors  |  September 2026  |  Strictly Private and Confidential",
+              "fontSize": 1100,
+              "align": "ctr",
+              "anchor": "t",
+              "color": "#A0A0A0"
+            }
+          },
+          {
+            "span": 3
+          }
+        ]
+      }
+    },
+    {
+      "title": "EBITDA Bridge: FY25A to FY27E",
+      "sectionLabel": "Value Creation",
+      "footer": "Source: Management plan, Harbor Point Advisors analysis. $m; illustrative figures.",
+      "body": {
+        "direction": "row",
+        "gap": 0.15,
+        "children": [
+          {
+            "span": 8,
+            "header": "EBITDA Walk ($m)",
+            "background": "#FFFFFF",
+            "content": {
+              "type": "chart",
+              "chartType": "waterfall",
+              "categories": ["FY25A", "Volume", "Pricing", "Margin", "Opex", "Products", "FY27E"],
+              "data": [42, 18, 9, 7, 11, 6, 93],
+              "gridTop": 20,
+              "gridBottom": 40,
+              "gridLeft": 45,
+              "gridRight": 15
+            }
+          },
+          {
+            "span": 4,
+            "direction": "col",
+            "gap": 0.15,
+            "children": [
+              {
+                "span": 7,
+                "header": "Plan at a Glance",
+                "content": {
+                  "type": "statGrid",
+                  "items": [
+                    {
+                      "value": "$93m",
+                      "label": "FY27E EBITDA",
+                      "sublabel": "2.2x FY25A"
+                    },
+                    {
+                      "value": "31%",
+                      "label": "EBITDA margin",
+                      "sublabel": "FY27E; +9 pts vs FY25A"
+                    },
+                    {
+                      "value": "$51m",
+                      "label": "Cumulative uplift",
+                      "sublabel": "FY25A to FY27E"
+                    },
+                    {
+                      "value": "35%",
+                      "label": "Revenue CAGR",
+                      "sublabel": "FY25A to FY27E"
+                    }
+                  ]
+                }
+              },
+              {
+                "span": 5,
+                "header": "Key Levers",
+                "content": {
+                  "type": "text",
+                  "fontSize": 1100,
+                  "runs": [
+                    {
+                      "text": "Volume: 210 to 340 customers by FY27E",
+                      "bullet": true
+                    },
+                    {
+                      "text": "Pricing: usage tiers add 6% net uplift",
+                      "bullet": true
+                    },
+                    {
+                      "text": "Opex: G&A held flat as revenue doubles",
+                      "bullet": true
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "Revenue Mix and Unit Economics",
+      "sectionLabel": "Value Creation",
+      "footer": "Source: Management accounts FY25A. Illustrative figures.",
+      "body": {
+        "direction": "row",
+        "gap": 0.15,
+        "children": [
+          {
+            "span": 5,
+            "header": "FY25A Revenue by Product",
+            "background": "#FFFFFF",
+            "content": {
+              "type": "chart",
+              "chartType": "pie",
+              "items": [
+                {
+                  "name": "Core Ledger",
+                  "value": 62
+                },
+                {
+                  "name": "Reconcile",
+                  "value": 24
+                },
+                {
+                  "name": "Reporting Hub",
+                  "value": 14
+                }
+              ],
+              "doughnut": true,
+              "sliceColors": {
+                "0": "#E94560",
+                "1": "#16213E",
+                "2": "#F5A623"
+              },
+              "pieBorderColor": "#FFFFFF",
+              "pieBorderWidth": 2,
+              "centerY": "46%",
+              "valueSuffix": "%",
+              "showLabel": false,
+              "showPieValues": true,
+              "pieValuePosition": "inside",
+              "outerRadius": "68%"
+            }
+          },
+          {
+            "span": 7,
+            "direction": "col",
+            "gap": 0.15,
+            "children": [
+              {
+                "span": 6,
+                "header": "Unit Economics by Product",
+                "content": {
+                  "type": "table",
+                  "data": {
+                    "headers": ["Product", "ARR ($m)", "Gross Margin", "NRR", "Payback"],
+                    "rows": [
+                      ["Core Ledger", "41.2", "82%", "121%", "14 mo"],
+                      ["Reconcile", "15.8", "76%", "112%", "17 mo"],
+                      ["Reporting Hub", "9.1", "71%", "108%", "22 mo"],
+                      ["Total", "66.1", "79%", "118%", "16 mo"]
+                    ],
+                    "colWidths": [4, 2, 2, 2, 2],
+                    "colAlign": ["l", "r", "r", "r", "r"],
+                    "summaryRows": 1,
+                    "rowHeight": 0.42,
+                    "headerHeight": 0.38
+                  }
+                }
+              },
+              {
+                "span": 6,
+                "header": "Observations",
+                "content": {
+                  "type": "text",
+                  "fontSize": 1100,
+                  "runs": [
+                    {
+                      "text": "Core Ledger drives 62% of ARR at the highest margin and retention",
+                      "bullet": true
+                    },
+                    {
+                      "text": "Reconcile is the fastest-growing line: 48% ARR growth in FY25A",
+                      "bullet": true
+                    },
+                    {
+                      "text": "Reporting Hub payback improves as the launch cohort renews",
+                      "bullet": true
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "title": "Ledgerline Technologies — Company Profile",
+  "style": "corporate",
+  "slides": [
+    {
+      "title": "Company Profile: Ledgerline",
+      "sectionLabel": "Private Company Profile",
+      "footer": "Source: Company website, press releases, Harbor Point Advisors estimates. All figures illustrative.",
+      "body": {
+        "direction": "col",
+        "gap": 0.12,
+        "children": [
+          {
+            "span": 6,
+            "direction": "row",
+            "gap": 0.12,
+            "children": [
+              {
+                "span": 6,
+                "header": "Company Overview",
+                "content": {
+                  "type": "text",
+                  "fontSize": 1100,
+                  "runs": [
+                    {
+                      "text": "Ledgerline provides cloud-native reconciliation and ledger software for mid-market banks and payment companies. Founded in 2016 and headquartered in Denver, the company serves 210 customers across North America and Europe.\n"
+                    },
+                    {
+                      "text": "FY25 revenue of $64m, growing 38% year on year",
+                      "bullet": true
+                    },
+                    {
+                      "text": "94% of revenue is recurring subscription; 118% net revenue retention",
+                      "bullet": true
+                    },
+                    {
+                      "text": "310 employees; engineering hubs in Denver and Lisbon",
+                      "bullet": true
+                    },
+                    {
+                      "text": "Founder-led; venture-backed since 2018",
+                      "bullet": true
+                    }
+                  ]
+                }
+              },
+              {
+                "span": 6,
+                "header": "Fundraising History",
+                "content": {
+                  "type": "table",
+                  "data": {
+                    "headers": ["Date", "Round", "Size", "Lead Investor", "Post-Money"],
+                    "rows": [
+                      ["Mar 2018", "Seed", "$4m", "Copperfield VC", "$16m"],
+                      ["Sep 2019", "Series A", "$15m", "Granite Peak", "$70m"],
+                      ["Jun 2021", "Series B", "$42m", "Bluewater Growth", "$310m"],
+                      ["Nov 2023", "Series C", "$85m", "Summit Ridge", "$820m"]
+                    ],
+                    "colWidths": [2.25, 2, 1.75, 3.5, 2.5],
+                    "colAlign": ["l", "l", "r", "l", "r"],
+                    "rowHeight": 0.34,
+                    "headerHeight": 0.32,
+                    "fontSize": 1000,
+                    "headerFontSize": 1000
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "span": 6,
+            "direction": "row",
+            "gap": 0.12,
+            "children": [
+              {
+                "span": 6,
+                "header": "Products",
+                "content": {
+                  "type": "text",
+                  "fontSize": 1100,
+                  "runs": [
+                    {
+                      "text": "Ledgerline Core",
+                      "bold": true,
+                      "bullet": true
+                    },
+                    {
+                      "text": "Real-time general ledger and sub-ledger engine; 62% of revenue",
+                      "bullet": true,
+                      "bulletLevel": 1
+                    },
+                    {
+                      "text": "Reconcile",
+                      "bold": true,
+                      "bullet": true
+                    },
+                    {
+                      "text": "Automated matching across card, ACH and wire flows; 24% of revenue",
+                      "bullet": true,
+                      "bulletLevel": 1
+                    },
+                    {
+                      "text": "Reporting Hub",
+                      "bold": true,
+                      "bullet": true
+                    },
+                    {
+                      "text": "Regulatory and management reporting; launched 2024, 14% of revenue",
+                      "bullet": true,
+                      "bulletLevel": 1
+                    }
+                  ]
+                }
+              },
+              {
+                "span": 6,
+                "header": "Management Team",
+                "content": {
+                  "type": "cardGrid",
+                  "items": [
+                    {
+                      "title": "Priya Ramanathan, CEO",
+                      "lines": ["Co-founder; 18 yrs in fintech", "Ex payments product lead"]
+                    },
+                    {
+                      "title": "Tomas Vieira, CTO",
+                      "lines": ["Co-founder; built the core", "Ex core-banking architect"]
+                    },
+                    {
+                      "title": "Dana Okafor, CFO",
+                      "lines": ["Joined 2022; led Series C", "Ex CFO of listed SaaS co."]
+                    },
+                    {
+                      "title": "Marcus Lindqvist, CRO",
+                      "lines": ["Joined 2021; scaled ARR 4x", "20 yrs enterprise sales"]
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
