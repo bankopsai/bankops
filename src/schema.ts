@@ -466,6 +466,8 @@ function pathString(path: PropertyKey[]): string {
 }
 
 const FIX_HINTS: { test: RegExp; fix: string }[] = [
+  { test: /items\[\d+\]\.lines/, fix: "cardGrid items are { title, lines: string[] }" },
+  { test: /content\.data.*expected object/i, fix: 'table content is { type: "table", data: { headers, rows, colWidths } }' },
   { test: /Invalid discriminator|Invalid input.*type/i, fix: `content.type must be one of: ${CONTENT_TYPES.join(", ")}` },
   { test: /hundredths of a point/i, fix: "Multiply the point size by 100 (14pt -> 1400)" },
   { test: /hex strings/i, fix: 'Use "#RRGGBB" form, e.g. "#405363"' },
@@ -582,16 +584,118 @@ function lintNode(node: any, path: string, depth: number, warnings: DeckIssue[],
   }
 }
 
+// ---- Normalization: accept the shapes models naturally write ----
+
+/**
+ * Rewrite common near-miss shapes into the canonical format, recording what changed.
+ * Applied before validation by validateDeck; the deck returned there is the normalized one.
+ *
+ *   cardGrid items { title, text | description | body }  -> { title, lines: [text] }
+ *   cardGrid items { title, lines: "one string" }         -> lines: ["one string"]
+ *   table { columns | headers, rows } at content level    -> { data: { headers, rows } }
+ *   text { bullets: string[] } or { items: string[] }     -> runs with bullet: true
+ *   text { text: ["a", "b"] }                             -> runs with bullet: true
+ *   statGrid items { value: 12 }                          -> value: "12"
+ *   chart series { values: [...] }                        -> { data: [...] }
+ *   slide with `content` or `children` but no `body`      -> wrapped in body
+ *   "bulletList" content type                             -> text with bullet runs
+ */
+export function normalizeDeck(input: unknown, notes: DeckIssue[] = []): unknown {
+  if (!input || typeof input !== "object" || Array.isArray(input)) return input;
+  const deck: any = JSON.parse(JSON.stringify(input));
+  const note = (path: string, message: string) => notes.push({ path, message });
+
+  const fixContent = (c: any, path: string) => {
+    if (!c || typeof c !== "object") return c;
+    if (c.type === "bulletList") {
+      const items = Array.isArray(c.items) ? c.items : [];
+      note(path, 'bulletList became text with bullet runs');
+      const { items: _i, type: _t, ...rest } = c;
+      return { ...rest, type: "text", runs: items.map((t: any) => ({ text: String(t), bullet: true })) };
+    }
+    if (c.type === "text") {
+      const list = Array.isArray(c.bullets) ? c.bullets : Array.isArray(c.items) ? c.items : Array.isArray(c.text) ? c.text : null;
+      if (list && !c.runs) {
+        note(path, "bullet list became runs with bullet: true");
+        const { bullets: _b, items: _i, ...rest } = c;
+        return { ...rest, text: undefined, runs: list.map((t: any) => (typeof t === "object" && t && "text" in t ? { bullet: true, ...t } : { text: String(t), bullet: true })) };
+      }
+      return c;
+    }
+    if (c.type === "cardGrid" && Array.isArray(c.items)) {
+      c.items = c.items.map((it: any, i: number) => {
+        if (!it || typeof it !== "object") return it;
+        if (Array.isArray(it.lines)) return it;
+        const text = typeof it.lines === "string" ? it.lines : it.text ?? it.description ?? it.body ?? it.detail;
+        if (text == null) return it;
+        note(`${path}.items[${i}]`, "card text became lines: [text]");
+        const { text: _t, description: _d, body: _b, detail: _e, lines: _l, ...rest } = it;
+        return { ...rest, lines: Array.isArray(text) ? text.map(String) : [String(text)] };
+      });
+      return c;
+    }
+    if (c.type === "table" && !c.data && Array.isArray(c.rows)) {
+      note(path, "table columns/rows moved under data");
+      const { rows, columns, headers, colWidths, colAlign, align, rowHeight, headerHeight, fontSize, headerFontSize, summaryRows, verticalHeaders, ...rest } = c;
+      const data: any = { rows: rows.map((r: any) => (Array.isArray(r) ? r.map((cell: any) => (cell != null && typeof cell !== "object" ? String(cell) : cell)) : r)) };
+      const h = headers ?? columns;
+      if (Array.isArray(h)) data.headers = h.map(String);
+      for (const [k, v] of Object.entries({ colWidths, colAlign, align, rowHeight, headerHeight, fontSize, headerFontSize, summaryRows, verticalHeaders })) if (v !== undefined) data[k] = v;
+      return { ...rest, data };
+    }
+    if (c.type === "table" && c.data && Array.isArray(c.data.rows)) {
+      if (Array.isArray(c.data.columns) && !c.data.headers) { c.data.headers = c.data.columns.map(String); delete c.data.columns; note(`${path}.data`, "columns became headers"); }
+      c.data.rows = c.data.rows.map((r: any) => (Array.isArray(r) ? r.map((cell: any) => (cell != null && typeof cell !== "object" ? String(cell) : cell)) : r));
+      return c;
+    }
+    if (c.type === "statGrid" && Array.isArray(c.items)) {
+      c.items = c.items.map((it: any) => (it && typeof it === "object" && typeof it.value === "number" ? { ...it, value: String(it.value) } : it));
+      return c;
+    }
+    if (c.type === "chart") {
+      for (const key of ["series", "bars", "lines"]) {
+        if (Array.isArray(c[key])) c[key] = c[key].map((ser: any) => (ser && typeof ser === "object" && !ser.data && Array.isArray(ser.values) ? (note(`${path}.${key}`, "series values became data"), { ...ser, data: ser.values, values: undefined }) : ser));
+      }
+      return c;
+    }
+    return c;
+  };
+
+  const walk = (node: any, path: string) => {
+    if (!node || typeof node !== "object") return;
+    if (node.content) node.content = fixContent(node.content, `${path}.content`);
+    if (Array.isArray(node.children)) node.children.forEach((ch: any, i: number) => walk(ch, `${path}.children[${i}]`));
+  };
+
+  if (Array.isArray(deck.slides)) {
+    deck.slides = deck.slides.map((slide: any, i: number) => {
+      if (!slide || typeof slide !== "object") return slide;
+      if (!slide.body && (slide.content || slide.children)) {
+        note(`slides[${i}]`, "content/children wrapped in body");
+        const { content, children, direction, gap, ...rest } = slide;
+        slide = { ...rest, body: { ...(direction ? { direction } : {}), ...(gap != null ? { gap } : {}), ...(content ? { content } : {}), ...(children ? { children } : {}) } };
+      }
+      if (slide.body) walk(slide.body, `slides[${i}].body`);
+      return slide;
+    });
+  }
+  return deck;
+}
+
 /**
  * Validate a deck. Never throws. Errors carry a JSON path, a message, and a fix hint
- * where one is known. Warnings are non-fatal lint findings.
+ * where one is known. Warnings are non-fatal lint findings. Common near-miss shapes
+ * are normalized first (see normalizeDeck); `deck` in the result is the normalized deck.
  */
-export function validateDeck(input: unknown): ValidationResult {
+export function validateDeck(rawInput: unknown): ValidationResult {
   const errors: DeckIssue[] = [];
   const warnings: DeckIssue[] = [];
-  if (!input || typeof input !== "object" || Array.isArray(input)) {
+  if (!rawInput || typeof rawInput !== "object" || Array.isArray(rawInput)) {
     return { ok: false, errors: [{ path: "deck", message: "Deck must be a JSON object", fix: 'Send { "slides": [ ... ] }' }], warnings };
   }
+  const normalized: DeckIssue[] = [];
+  const input = normalizeDeck(rawInput, normalized);
+  for (const n of normalized) warnings.push({ path: n.path, message: `Normalized: ${n.message}`, fix: "Accepted; write the canonical shape next time" });
   const parsed = DeckSchema.safeParse(input);
   if (!parsed.success) {
     for (const issue of parsed.error.issues) {

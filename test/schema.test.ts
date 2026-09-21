@@ -89,3 +89,23 @@ test("scatter series accept [x, y] pairs", () => {
   const r = validateDeck({ slides: [{ body: { content: { type: "chart", chartType: "scatter", series: [{ name: "Peers", data: [[1.2, 14], [2.5, 22]] }] } } }] });
   assert.equal(r.ok, true, JSON.stringify(r.errors));
 });
+
+test("normalizes the shapes models naturally write", () => {
+  const r = validateDeck({ slides: [
+    { title: "Themes", body: { children: [
+      { span: 6, content: { type: "cardGrid", items: [{ title: "A", text: "one" }, { title: "B", description: "two" }] } },
+      { span: 6, content: { type: "table", columns: ["Co", "EV"], rows: [["X", 12], ["Y", 8]] } },
+    ] } },
+    { title: "Bullets", content: { type: "text", bullets: ["a", "b"] } },
+    { title: "Stats", body: { content: { type: "statGrid", items: [{ value: 42, label: "n" }] } } },
+  ] });
+  assert.equal(r.ok, true, JSON.stringify(r.errors));
+  const d = r.deck as any;
+  assert.deepEqual(d.slides[0].body.children[0].content.items[1].lines, ["two"]);
+  assert.deepEqual(d.slides[0].body.children[1].content.data.headers, ["Co", "EV"]);
+  assert.equal(d.slides[0].body.children[1].content.data.rows[0][1], "12");
+  assert.equal(d.slides[1].body.content.runs[1].bullet, true);
+  assert.equal(d.slides[2].body.content.items[0].value, "42");
+  assert.ok(r.warnings.every((w) => w.message.startsWith("Normalized:")));
+  assert.ok(r.warnings.length >= 4);
+});
