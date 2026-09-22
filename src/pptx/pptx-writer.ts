@@ -685,11 +685,14 @@ export class PptxWriter {
     if (tcPr.anchor && tcPr.anchor !== 't') xml += ' anchor="' + tcPr.anchor + '"';
     xml += '>';
 
+    // Absent borders are written as explicit noFill so PowerPoint and LibreOffice do not
+    // fall back to the table style's gridlines.
     const borders = tcPr.borders;
-    if (borders.l) xml += this._cellBorderXml('lnL', borders.l);
-    if (borders.r) xml += this._cellBorderXml('lnR', borders.r);
-    if (borders.t) xml += this._cellBorderXml('lnT', borders.t);
-    if (borders.b) xml += this._cellBorderXml('lnB', borders.b);
+    const none = (name: string) => '<a:' + name + ' w="0"><a:noFill/></a:' + name + '>';
+    xml += borders.l ? this._cellBorderXml('lnL', borders.l) : none('lnL');
+    xml += borders.r ? this._cellBorderXml('lnR', borders.r) : none('lnR');
+    xml += borders.t ? this._cellBorderXml('lnT', borders.t) : none('lnT');
+    xml += borders.b ? this._cellBorderXml('lnB', borders.b) : none('lnB');
 
     if (tcPr.fill) xml += this._fillXml(tcPr.fill);
 

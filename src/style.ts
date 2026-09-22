@@ -154,7 +154,10 @@ export const DEFAULT_STYLE = {
   },
 
   table: {
-    headerFill: null,             // null = inherit from colors.accent
+    headerFill: null,             // null = inherit from colors.darkFill (matches zone header bars)
+    headerRuleColor: null,        // rule under the header row; null = inherit from colors.accent
+    headerRuleWidth: 1.25,        // pt; 0 = no rule
+    borderMode: 'horizontal',     // 'horizontal' (rules between rows only) | 'grid' (every cell) | 'none'
     headerTextColor: '#FFFFFF',
     headerSize: 12,               // pt
     headerBold: true,
@@ -168,23 +171,23 @@ export const DEFAULT_STYLE = {
     bodyTextColor: null,          // null = inherit from colors.primary
     bodyFont: null,               // null = inherit from fonts.body
     alternateRows: true,           // even/odd row backgrounds differ
-    evenRowFill: '#F2F2F2',
+    evenRowFill: '#F4F6F9',       // subtle banding
     oddRowFill: '#FFFFFF',
-    borderColor: '#BFBFBF',
-    borderWidth: 0.75,            // pt
-    summaryRowFill: null,           // null = inherit from headerFill
-    summaryRowTextColor: null,      // null = inherit from headerTextColor
+    borderColor: '#D9DEE5',       // hairline between rows
+    borderWidth: 0.5,             // pt
+    summaryRowFill: '#E9EEF6',      // light accent tint (median, mean, total rows)
+    summaryRowTextColor: null,      // null = inherit from colors.primary
     summaryRowSize: null,           // null = inherit from bodySize
     summaryRowBold: true,
     summaryRowFont: null,           // null = inherit from bodyFont
-    summaryRowBorderTopColor: null,    // null = use table borderColor
-    summaryRowBorderTopWidth: null,    // null = use table borderWidth
-    summaryRowBorderBottomColor: null,
-    summaryRowBorderBottomWidth: null,
+    summaryRowBorderTopColor: null,    // null = inherit from colors.accent
+    summaryRowBorderTopWidth: 1,       // pt
+    summaryRowBorderBottomColor: null, // null = inherit from colors.accent
+    summaryRowBorderBottomWidth: 1,
     summaryRowBorderLeftColor: null,
-    summaryRowBorderLeftWidth: null,
+    summaryRowBorderLeftWidth: 0,      // no vertical rules by default
     summaryRowBorderRightColor: null,
-    summaryRowBorderRightWidth: null
+    summaryRowBorderRightWidth: 0
   },
 
   statGrid: {
@@ -322,14 +325,15 @@ export class SlideStyle {
         border: s.colors.border
       },
       tableHeader: {
-        fillColor: s.table.headerFill || accent,
+        fillColor: s.table.headerFill || s.colors.darkFill,
         textColor: s.table.headerTextColor,
         font: s.table.headerFont || null,
         fontSize: U.pointsToFontSize(s.table.headerSize),
-        bold: s.table.headerBold
+        bold: s.table.headerBold,
+        borderBottom: { color: s.table.headerRuleColor || accent, width: Math.round(U.pointsToEmu(s.table.headerRuleWidth != null ? s.table.headerRuleWidth : 0)) }
       },
       tableVerticalHeader: {
-        fillColor: s.table.verticalHeaderFill || s.table.headerFill || accent,
+        fillColor: s.table.verticalHeaderFill || s.table.headerFill || s.colors.darkFill,
         textColor: s.table.verticalHeaderTextColor || s.table.headerTextColor,
         font: s.table.verticalHeaderFont || s.table.headerFont || null,
         fontSize: U.pointsToFontSize(s.table.verticalHeaderSize || s.table.headerSize),
@@ -344,19 +348,20 @@ export class SlideStyle {
         fontSize: U.pointsToFontSize(s.table.bodySize)
       },
       tableSummaryRow: {
-        fillColor: s.table.summaryRowFill || s.table.headerFill || accent,
-        textColor: s.table.summaryRowTextColor || s.table.headerTextColor,
+        fillColor: s.table.summaryRowFill || s.table.headerFill || s.colors.darkFill,
+        textColor: s.table.summaryRowTextColor || (s.table.summaryRowFill ? primary : s.table.headerTextColor),
         font: s.table.summaryRowFont || s.table.bodyFont || null,
         fontSize: U.pointsToFontSize(s.table.summaryRowSize || s.table.bodySize),
         bold: s.table.summaryRowBold != null ? s.table.summaryRowBold : true,
-        borderTop: { color: s.table.summaryRowBorderTopColor || s.table.borderColor || s.colors.border, width: U.pointsToEmu(s.table.summaryRowBorderTopWidth != null ? s.table.summaryRowBorderTopWidth : s.table.borderWidth) },
-        borderBottom: { color: s.table.summaryRowBorderBottomColor || s.table.borderColor || s.colors.border, width: U.pointsToEmu(s.table.summaryRowBorderBottomWidth != null ? s.table.summaryRowBorderBottomWidth : s.table.borderWidth) },
+        borderTop: { color: s.table.summaryRowBorderTopColor || accent, width: U.pointsToEmu(s.table.summaryRowBorderTopWidth != null ? s.table.summaryRowBorderTopWidth : s.table.borderWidth) },
+        borderBottom: { color: s.table.summaryRowBorderBottomColor || accent, width: U.pointsToEmu(s.table.summaryRowBorderBottomWidth != null ? s.table.summaryRowBorderBottomWidth : s.table.borderWidth) },
         borderLeft: { color: s.table.summaryRowBorderLeftColor || s.table.borderColor || s.colors.border, width: U.pointsToEmu(s.table.summaryRowBorderLeftWidth != null ? s.table.summaryRowBorderLeftWidth : s.table.borderWidth) },
         borderRight: { color: s.table.summaryRowBorderRightColor || s.table.borderColor || s.colors.border, width: U.pointsToEmu(s.table.summaryRowBorderRightWidth != null ? s.table.summaryRowBorderRightWidth : s.table.borderWidth) }
       },
       tableBorder: {
         color: s.table.borderColor || s.colors.border,
-        width: U.pointsToEmu(s.table.borderWidth)
+        width: U.pointsToEmu(s.table.borderWidth),
+        mode: s.table.borderMode === 'grid' || s.table.borderMode === 'none' ? s.table.borderMode : 'horizontal'
       },
       // New categories (previously hardcoded)
       slide: {
@@ -481,7 +486,7 @@ export class SlideStyle {
         headerBarText: '#FFFFFF', cardFill: '#16213e'
       },
       fonts: { title: 'Arial Bold', body: 'Arial', label: 'Arial', dividerNumber: 'Arial' },
-      table: { evenRowFill: '#16213e', oddRowFill: '#1a1a2e', headerTextColor: '#FFFFFF' }
+      table: { evenRowFill: '#16213e', oddRowFill: '#1a1a2e', headerTextColor: '#FFFFFF', borderColor: '#33405c', summaryRowFill: '#243357', summaryRowTextColor: '#EAEAEA' }
     },
   
     warm: {

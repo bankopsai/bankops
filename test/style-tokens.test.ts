@@ -56,14 +56,16 @@ test("partial override keeps every other default", () => {
 });
 
 test("colors cascade into every dependent token unless set explicitly", () => {
-  const int = new SlideStyle({ colors: { primary: "#111111", secondary: "#222222", accent: "#333333" } }).toInternal();
+  const int = new SlideStyle({ colors: { primary: "#111111", secondary: "#222222", accent: "#333333", darkFill: "#444444" } }).toInternal();
   assert.equal(int.mainTitle.color, "#405363", "title.color is explicit, not cascaded");
   assert.equal(int.bodyText.color, "#111111", "body.color -> colors.primary");
   assert.equal(int.bullet.color, "#111111", "bullet.color -> colors.primary");
   assert.equal(int.footnote.color, "#222222", "footnote.color -> colors.secondary");
   assert.equal(int.sectionLabel.color, "#333333", "sectionLabel.color -> colors.accent");
   assert.equal(int.divider.titleColor, "#333333", "divider.titleColor -> colors.accent");
-  assert.equal(int.tableHeader.fillColor, "#333333", "tableHeader.fillColor -> colors.accent");
+  assert.equal(int.tableHeader.fillColor, "#444444", "tableHeader.fillColor -> colors.darkFill");
+  assert.equal(int.tableHeader.borderBottom!.color, "#333333", "header rule -> colors.accent");
+  assert.equal(int.tableSummaryRow.borderTop.color, "#333333", "summary rule -> colors.accent");
 
   const int2 = new SlideStyle({ colors: { primary: "#111111" }, title: { color: "#AAAAAA" } }).toInternal();
   assert.equal(int2.mainTitle.color, "#AAAAAA", "explicit title.color overrides the cascade");

@@ -1338,8 +1338,16 @@ class SlideBuilder {
     // Per-column alignment map
     const alignMap = data.align || {};
 
-    // Cell border style
-    const cellBorder = s.tableBorder ? new DM.LineProps({ width: s.tableBorder.width, color: s.tableBorder.color }) : null;
+    // Cell border style. "horizontal" (default) draws rules between rows only; "grid" every edge; "none" nothing.
+    const borderMode = (s.tableBorder && s.tableBorder.mode) || 'horizontal';
+    const hairline = s.tableBorder && borderMode !== 'none' && s.tableBorder.width > 0 ? new DM.LineProps({ width: s.tableBorder.width, color: s.tableBorder.color }) : null;
+    const cellBorder = hairline;
+    const vertical = borderMode === 'grid' ? hairline : null;
+    const headerRule = s.tableHeader.borderBottom && s.tableHeader.borderBottom.width > 0
+      ? new DM.LineProps({ width: s.tableHeader.borderBottom.width, color: s.tableHeader.borderBottom.color })
+      : hairline;
+    const srBorders = s.tableSummaryRow;
+    const lineOrNull = (b: any) => (b && b.width > 0 ? new DM.LineProps({ width: b.width, color: b.color }) : (borderMode === 'grid' ? hairline : null));
 
     // Track image cells for overlay rendering
     const imageCells: any[] = [];
@@ -1358,7 +1366,7 @@ class SlideBuilder {
         }));
         hCell.txBody.paragraphs.push(hPara);
         hCell.tcPr.fill = new DM.Fill('solid', { color: s.tableHeader.fillColor });
-        if (cellBorder) hCell.tcPr.borders = { l: cellBorder, r: cellBorder, t: cellBorder, b: cellBorder };
+        hCell.tcPr.borders = { l: vertical, r: vertical, t: borderMode === 'grid' ? hairline : null, b: headerRule };
         headerRow.cells.push(hCell);
       }
       td.rows.push(headerRow);
@@ -1410,19 +1418,17 @@ class SlideBuilder {
         cell.txBody.paragraphs.push(cPara);
         const cellFillColor = isVerticalHeaderCell ? s.tableVerticalHeader.fillColor : isSummaryRow ? s.tableSummaryRow.fillColor : ((s.tableBody.alternateRows !== false && ri % 2 === 0) ? s.tableBody.fillEven : s.tableBody.fillOdd);
         cell.tcPr.fill = new DM.Fill('solid', { color: cellFillColor });
+        const topRule = ri === 0 && hasHeaders ? headerRule : cellBorder;
         if (isSummaryRow) {
-          // Summary row group borders: top on first, bottom on last, left/right on all
-          const srBorderT = isFirstSummaryRow ? new DM.LineProps({ width: s.tableSummaryRow.borderTop.width, color: s.tableSummaryRow.borderTop.color }) : cellBorder;
-          const srBorderB = isLastSummaryRow ? new DM.LineProps({ width: s.tableSummaryRow.borderBottom.width, color: s.tableSummaryRow.borderBottom.color }) : cellBorder;
-          const srBorderL = new DM.LineProps({ width: s.tableSummaryRow.borderLeft.width, color: s.tableSummaryRow.borderLeft.color });
-          const srBorderR = new DM.LineProps({ width: s.tableSummaryRow.borderRight.width, color: s.tableSummaryRow.borderRight.color });
-          cell.tcPr.borders = { l: srBorderL, r: srBorderR, t: srBorderT, b: srBorderB };
+          // Summary row group: accent rule on top of the first and under the last; verticals only in grid mode
+          const srBorderT = isFirstSummaryRow ? lineOrNull(srBorders.borderTop) : cellBorder;
+          const srBorderB = isLastSummaryRow ? lineOrNull(srBorders.borderBottom) : cellBorder;
+          cell.tcPr.borders = { l: lineOrNull(srBorders.borderLeft), r: lineOrNull(srBorders.borderRight), t: srBorderT, b: srBorderB };
         } else if (summaryRowCount > 0 && ri === summaryStartIdx - 1) {
-          // Row just above summary: set bottom border to summary top border so it takes precedence
-          const preSmryBorderB = new DM.LineProps({ width: s.tableSummaryRow.borderTop.width, color: s.tableSummaryRow.borderTop.color });
-          cell.tcPr.borders = { l: cellBorder, r: cellBorder, t: cellBorder, b: preSmryBorderB };
-        } else if (cellBorder) {
-          cell.tcPr.borders = { l: cellBorder, r: cellBorder, t: cellBorder, b: cellBorder };
+          // Row just above summary: bottom border = summary top rule so it takes precedence
+          cell.tcPr.borders = { l: vertical, r: vertical, t: topRule, b: lineOrNull(srBorders.borderTop) };
+        } else {
+          cell.tcPr.borders = { l: vertical, r: vertical, t: topRule, b: cellBorder };
         }
         row.cells.push(cell);
       }

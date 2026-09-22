@@ -483,7 +483,7 @@ export interface StyleTokens {
   footnote: { font: string; fontSize: number; color: string; y: number };
   divider: { numberFont: string; numberFontSize: number; numberColor: string; numberX: number; numberY: number; titleFont: string; titleFontSize: number; titleColor: string; titleY: number };
   palette: { primaryText: string; secondaryText: string; accent: string; darkFill: string; border: string };
-  tableHeader: { fillColor: string; textColor: string; font: string | null; fontSize: number; bold: boolean };
+  tableHeader: { fillColor: string; textColor: string; font: string | null; fontSize: number; bold: boolean; borderBottom?: { color: string; width: number } };
   tableVerticalHeader: { fillColor: string; textColor: string; font: string | null; fontSize: number; bold: boolean };
   tableBody: { alternateRows: boolean; fillEven: string; fillOdd: string; textColor: string; font: string | null; fontSize: number };
   tableSummaryRow: {
@@ -497,7 +497,8 @@ export interface StyleTokens {
     borderLeft: { color: string; width: number };
     borderRight: { color: string; width: number };
   };
-  tableBorder: { color: string; width: number };
+  /** mode: "horizontal" = rules between rows only (default), "grid" = every cell edge, "none" */
+  tableBorder: { color: string; width: number; mode?: "horizontal" | "grid" | "none" };
   table?: { overflowWrap?: "normal" | "anywhere" | "break-word" };
   slide: { background: string };
   headerBar: { textColor: string };

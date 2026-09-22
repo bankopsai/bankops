@@ -8,7 +8,9 @@ test("defaults produce the corporate token set", () => {
   assert.equal(t.mainTitle.fontSize, 2800);
   assert.equal(t.palette.accent, "#4472C4");
   assert.equal(t.bullet.indent, -Math.round(0.375 * 914400));
-  assert.equal(t.tableHeader.fillColor, "#4472C4");
+  assert.equal(t.tableHeader.fillColor, "#164556"); // darkFill, matching zone header bars
+  assert.equal(t.tableBorder.mode, "horizontal");
+  assert.equal(t.tableHeader.borderBottom!.color, "#4472C4");
   assert.ok(t.tableSummaryRow.borderTop.width > 0);
 });
 

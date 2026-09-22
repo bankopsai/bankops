@@ -345,13 +345,16 @@ deep). Units here are human: points and inches, not hundredths.
                     "fontFamily": null, "bold": null, "italic": null },
   "subheader":    { "size": null, "bold": true, "color": null, "align": "ctr", "lineColor": null, "lineWidth": 0.75, "fontFamily": null, "italic": null },
   "subfooter":    { "size": null, "italic": true, "color": null, "fontFamily": null },
-  "table":        { "headerFill": null, "headerTextColor": "#FFFFFF", "headerSize": 12, "headerBold": true, "headerFont": null,
+  "table":        { "headerFill": null,            // null = colors.darkFill (same navy as zone header bars)
+                    "headerTextColor": "#FFFFFF", "headerSize": 12, "headerBold": true, "headerFont": null,
+                    "headerRuleColor": null, "headerRuleWidth": 1.25,   // rule under the header; null color = colors.accent
+                    "borderMode": "horizontal",   // "horizontal" = hairlines between rows only (the IB look) | "grid" | "none"
                     "verticalHeaderFill": null, "verticalHeaderTextColor": null, "verticalHeaderSize": null, "verticalHeaderBold": null, "verticalHeaderFont": null,
                     "bodySize": 11, "bodyTextColor": null, "bodyFont": null,
-                    "alternateRows": true, "evenRowFill": "#F2F2F2", "oddRowFill": "#FFFFFF", "borderColor": "#BFBFBF", "borderWidth": 0.75,
-                    "summaryRowFill": null, "summaryRowTextColor": null, "summaryRowSize": null, "summaryRowBold": true, "summaryRowFont": null,
-                    "summaryRowBorderTopColor": null, "summaryRowBorderTopWidth": null, "summaryRowBorderBottomColor": null, "summaryRowBorderBottomWidth": null,
-                    "summaryRowBorderLeftColor": null, "summaryRowBorderLeftWidth": null, "summaryRowBorderRightColor": null, "summaryRowBorderRightWidth": null },
+                    "alternateRows": true, "evenRowFill": "#F4F6F9", "oddRowFill": "#FFFFFF", "borderColor": "#D9DEE5", "borderWidth": 0.5,
+                    "summaryRowFill": "#E9EEF6", "summaryRowTextColor": null, "summaryRowSize": null, "summaryRowBold": true, "summaryRowFont": null,
+                    "summaryRowBorderTopColor": null, "summaryRowBorderTopWidth": 1, "summaryRowBorderBottomColor": null, "summaryRowBorderBottomWidth": 1,
+                    "summaryRowBorderLeftColor": null, "summaryRowBorderLeftWidth": 0, "summaryRowBorderRightColor": null, "summaryRowBorderRightWidth": 0 },
   "statGrid":     { "valueFontFamily": null, "valueSize": 16, "valueColor": null, "valueBold": true, "valueItalic": false,
                     "labelFontFamily": null, "labelSize": null, "labelColor": null, "labelBold": false, "labelItalic": false,
                     "sublabelFontFamily": null, "sublabelSize": null, "sublabelColor": null, "sublabelBold": false, "sublabelItalic": false },
