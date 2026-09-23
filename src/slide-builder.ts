@@ -7,6 +7,7 @@ import LC from "./pptx/layout-catalog.js";
 import SlideLayout from "./layout.js";
 import Defaults from "./defaults.js";
 import { fitTitle } from "./fit.js";
+import { isLegacyBulletList, legacyToText, lineSpacingNumber } from "./legacy.js";
 import SlideStyle from "./style.js";
 import { convertToNative } from "./charts/chart-to-native.js";
 import ChartGenerator from "./charts/chart-generator.js";
@@ -1113,6 +1114,10 @@ class SlideBuilder {
       case 'callout':
         this._renderCallout(slide, bounds, content);
         break;
+      case 'bulletList':
+        // Legacy shape: one bulleted paragraph per item
+        this._renderRichTextBlock(slide, bounds, legacyToText(content));
+        break;
       case 'profile':
         this._renderProfile(slide, bounds, content);
         break;
@@ -1486,8 +1491,9 @@ class SlideBuilder {
       }
     );
     // Apply line spacing if specified
-    if (o.lineSpacing != null) {
-      const lnSpc = Math.round(o.lineSpacing * 100);
+    const lineSpacing = lineSpacingNumber(o.lineSpacing);
+    if (lineSpacing != null) {
+      const lnSpc = Math.round(lineSpacing * 100);
       const paras = shape.textBody!.paragraphs;
       for (let li = 0; li < paras.length; li++) {
         paras[li].pPr.lnSpc = lnSpc;
@@ -1565,7 +1571,8 @@ class SlideBuilder {
     for (let i = 0; i < paragraphs.length; i++) {
       const para = new DM.Paragraph();
       para.pPr.algn = content.align || 'l';
-      if (content.lineSpacing != null) para.pPr.lnSpc = Math.round(content.lineSpacing * 100);
+      const paraSpacing = lineSpacingNumber(content.lineSpacing);
+      if (paraSpacing != null) para.pPr.lnSpc = Math.round(paraSpacing * 100);
 
       // Apply bullet formatting for bulleted paragraphs
       if (paraBullets[i]) {

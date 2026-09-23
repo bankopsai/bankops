@@ -14,3 +14,4 @@ export { LINE_SPACING } from "./defaults.js";
 export * from "./charts/chart-options.js";
 export { buildPptxChartOption } from "./charts/pptxchart-options.js";
 export { fitTitle, isNumericColumn, type TitleFit, type FitTitleOptions } from "./fit.js";
+export { legacyToText, isLegacyBulletList, lineSpacingNumber } from "./legacy.js";

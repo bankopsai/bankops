@@ -46,3 +46,14 @@ test("a callout renders as a panel, a bar and text", async () => {
   const textShape = pres.slides[0].shapes.find((s: any) => s.textBody && s.textBody.paragraphs.some((p: any) => p.runs.some((x: any) => /Bottom line/.test(x.text))));
   assert.ok(textShape);
 });
+
+test("legacy bulletList content renders as bullets and string line spacing is coerced", async () => {
+  const r = await renderDeck({ slides: [{ body: { content: { type: "bulletList", items: ["one", "two"], fontSize: 900, lineSpacing: "single" } } }] }, { validate: false });
+  const pres = await new PptxParser().parse(r.buffer);
+  const tb = pres.slides[0].shapes.find((s: any) => s.textBody)?.textBody;
+  assert.ok(tb, "text shape rendered");
+  assert.equal(tb.paragraphs.length, 2);
+  assert.equal(tb.paragraphs[0].runs[0].text, "one");
+  assert.ok(tb.paragraphs[0].pPr.buChar, "bulleted");
+  assert.equal(tb.paragraphs[0].pPr.lnSpc, 100);
+});

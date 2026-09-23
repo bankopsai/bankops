@@ -6,6 +6,7 @@
 import { z } from "zod";
 import type { DeckJson } from "./types.js";
 import { isNumericColumn } from "./fit.js";
+import { legacyToText, lineSpacingNumber } from "./legacy.js";
 
 // ---- Primitives ----
 
@@ -643,10 +644,13 @@ export function normalizeDeck(input: unknown, notes: DeckIssue[] = []): unknown 
   const fixContent = (c: any, path: string) => {
     if (!c || typeof c !== "object") return c;
     if (c.type === "bulletList") {
-      const items = Array.isArray(c.items) ? c.items : [];
-      note(path, 'bulletList became text with bullet runs');
-      const { items: _i, type: _t, ...rest } = c;
-      return { ...rest, type: "text", runs: items.map((t: any) => ({ text: String(t), bullet: true })) };
+      note(path, "bulletList became text with bullet runs");
+      return legacyToText(c);
+    }
+    if (c.type === "text" && typeof c.lineSpacing === "string") {
+      const ls = lineSpacingNumber(c.lineSpacing);
+      note(`${path}.lineSpacing`, `"${c.lineSpacing}" became ${ls ?? "unset"}`);
+      c = { ...c, lineSpacing: ls };
     }
     if (c.type === "text") {
       const list = Array.isArray(c.bullets) ? c.bullets : Array.isArray(c.items) ? c.items : Array.isArray(c.text) ? c.text : null;
