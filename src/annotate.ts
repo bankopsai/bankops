@@ -219,6 +219,15 @@ function annotateNode(node: any, parentWidth: number, parentHeight: number, fd: 
         c._maxChars = cpl * ml;
         break;
       }
+      case "callout": {
+        const fontSizePt = c.fontSize ? c.fontSize / 100 : fd.bodyFontSizePt;
+        const cpl = calcTextCharsPerLine(nodeWidth - 0.3, fontSizePt, font);
+        const ml = calcTextMaxLines(contentHeight, fontSizePt, font) - (c.title ? 1 : 0);
+        c._charsPerLine = cpl;
+        c._maxLines = Math.max(1, ml);
+        c._maxChars = cpl * Math.max(1, ml);
+        break;
+      }
       case "bulletList": {
         const blFont = c.font || fd.bulletFont;
         const fontSizePt = c.fontSize ? c.fontSize / 100 : fd.bulletFontSizePt;

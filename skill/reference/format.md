@@ -65,7 +65,7 @@ A node is a **container** (`children`) or a **leaf** (`content`), never both.
 | `childShape` | `"chevron"` \| `"pyramid"` | — | draws each child as a chevron (process flows) or pyramid tier |
 | `childShapeColor` | color | — | fill for the child shapes |
 | `children` | node[] | — | at most 50 |
-| `content` | content | — | one of the 11 content types (§4) |
+| `content` | content | — | one of the 12 content types (§4) |
 | `$component` | string | — | expands a node from `options.components[name]` at render time; render fails if the name is unknown |
 | `_sources` | `{ url?, api?, label?, date? }[]` | — | provenance metadata, not rendered |
 
@@ -273,13 +273,35 @@ options?: { secondaryValAxis?: boolean, barGrouping?: string } }]`, plus `second
 `secondaryValAxisMinVal`, `secondaryValAxisMaxVal`. Font sizes here are plain points (`10`), not
 hundredths.
 
-### 4.10 `line`
+### 4.10 `callout`
+
+A key-takeaway box: a tinted panel with an accent bar on the left, an optional bold title in the
+accent color, and text or runs. Use it for "bottom line", "so what", "key risk" and similar boxes,
+usually in a span-4 or span-5 column beside a table or chart.
+
+```jsonc
+{ "type": "callout", "title": "Bottom line", "text": "Risk scales with what an agent can reach, change and persist.",
+  "fontSize": 1200, "align": "l", "anchor": "ctr" }
+```
+
+| Field | Type | Notes |
+|---|---|---|
+| `title` | string | optional, bold, accent color |
+| `text` | string | plain text (`\n` splits paragraphs) |
+| `runs` | run[] | rich runs as in `text`; takes precedence over `text` |
+| `font`, `fontSize`, `color` | | overrides; `fontSize` in hundredths of a point |
+| `background`, `accentColor` | hex | override the panel fill and the bar/title color |
+| `align`, `anchor` | | `"l" \| "ctr" \| "r"`, `"t" \| "ctr" \| "b"` (default centered vertically) |
+
+Budgets: `_maxChars` as for `text`, minus the bar and padding, minus one line when a title is set.
+
+### 4.11 `line`
 
 ```jsonc
 { "type": "line", "color": "#BFBFBF", "width": 9525 }   // horizontal rule; width in EMU (9525 = 0.75pt)
 ```
 
-### 4.11 `timeline`
+### 4.12 `timeline`
 
 ```jsonc
 { "type": "timeline", "title": "Company history",

@@ -109,3 +109,16 @@ test("normalizes the shapes models naturally write", () => {
   assert.ok(r.warnings.every((w) => w.message.startsWith("Normalized:")));
   assert.ok(r.warnings.length >= 4);
 });
+
+test("callout content is accepted, and column widths are rescaled to 12", () => {
+  const r = validateDeck({ slides: [{ body: { children: [
+    { span: 8, content: { type: "table", data: { headers: ["A", "B"], rows: [["x", "1"]], colWidths: [3.2, 2.4] } } },
+    { span: 4, content: { type: "callout", title: "Key takeaway", body: "Freedom is an engineering property." } },
+  ] } }] });
+  assert.equal(r.ok, true, JSON.stringify(r.errors));
+  const d = r.deck as any;
+  assert.equal(d.slides[0].body.children[1].content.text, "Freedom is an engineering property.");
+  const cw = d.slides[0].body.children[0].content.data.colWidths;
+  assert.ok(Math.abs(cw.reduce((a: number, b: number) => a + b, 0) - 12) < 0.05, JSON.stringify(cw));
+  assert.ok(r.warnings.some((w) => w.message.includes("rescaled to 12")));
+});

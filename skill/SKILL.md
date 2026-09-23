@@ -143,7 +143,7 @@ each is in `reference/errors.md`.
 
 ## Reference
 
-- `reference/format.md` — every field: deck, slide, grid node, the 11 content types, 7 chart
+- `reference/format.md` — every field: deck, slide, grid node, the 12 content types, 7 chart
   types and their data shapes, `pptxChart`, style presets and the override object, layout presets
 - `reference/recipes.md` — IB layouts with exact spans and font sizes: company profiles (private
   1/2/3-page, public 1/4-page), credentials and tombstones, investment highlights, industry

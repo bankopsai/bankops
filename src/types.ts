@@ -361,6 +361,21 @@ export interface PptxChartContent {
   lineDataSymbolLineSize?: number;
 }
 
+/** A key-takeaway box: tinted panel with an accent bar, optional title, and text or runs. */
+export interface CalloutContent {
+  type: "callout";
+  title?: string;
+  text?: string;
+  runs?: TextRun[];
+  font?: string;
+  fontSize?: number;       // hundredths-pt
+  color?: string;
+  background?: string;     // panel fill override
+  accentColor?: string;    // bar and title color override
+  align?: "l" | "ctr" | "r";
+  anchor?: "t" | "ctr" | "b";
+}
+
 export interface LineContentSpec {
   type: "line";
   color?: string;
@@ -429,6 +444,7 @@ export type ContentSpec =
   | IconContent
   | ChartContent
   | PptxChartContent
+  | CalloutContent
   | LineContentSpec
   | TimelineContent;
 
@@ -515,6 +531,7 @@ export interface StyleTokens {
     sublabelFont: string; sublabelSize: number | null; sublabelColor: string; sublabelBold: boolean; sublabelItalic: boolean;
     paddingTop?: number | null;
   };
+  callout?: { fill: string; textColor: string; accentColor: string; titleColor: string; font: string | null; fontSize: number; titleSize: number; barWidth: number; padding: number };
   cardGrid?: {
     titleFont: string; titleSize: number | null; titleColor: string; titleBold: boolean; titleItalic: boolean;
     lineFont: string; lineSize: number | null; lineColor: string; lineBold: boolean; lineItalic: boolean;

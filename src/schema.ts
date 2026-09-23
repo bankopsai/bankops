@@ -298,6 +298,20 @@ export const PptxChartContentSchema = z.object({
   lineDataSymbolLineSize: z.number().optional(),
 });
 
+export const CalloutContentSchema = z.object({
+  type: z.literal("callout"),
+  title: z.string().optional(),
+  text: z.string().optional(),
+  runs: z.array(TextRunSchema).optional(),
+  font: z.string().optional(),
+  fontSize: fontSizeHundredths.optional(),
+  color: hexColor.optional(),
+  background: hexColor.optional(),
+  accentColor: hexColor.optional(),
+  align: align.optional(),
+  anchor: anchor.optional(),
+});
+
 export const LineContentSchema = z.object({
   type: z.literal("line"),
   color: hexColor.optional(),
@@ -348,7 +362,7 @@ export const TimelineContentSchema = z.object({
   textMode: z.enum(["plain", "bullet"]).optional(),
 });
 
-export const CONTENT_TYPES = ["text", "statGrid", "cardGrid", "table", "profile", "image", "icon", "chart", "pptxChart", "line", "timeline"] as const;
+export const CONTENT_TYPES = ["text", "statGrid", "cardGrid", "table", "profile", "image", "icon", "chart", "pptxChart", "callout", "line", "timeline"] as const;
 
 export const ContentSchema = z.discriminatedUnion("type", [
   TextContentSchema,
@@ -360,6 +374,7 @@ export const ContentSchema = z.discriminatedUnion("type", [
   IconContentSchema,
   ChartContentSchema as unknown as typeof TextContentSchema, // superRefine wrapper; discriminator still "type"
   PptxChartContentSchema,
+  CalloutContentSchema,
   LineContentSchema,
   TimelineContentSchema,
 ]);
@@ -522,7 +537,7 @@ const CONTENT_KEYS: Record<string, string[]> = {
   text: shapeKeys(TextContentSchema), statGrid: shapeKeys(StatGridContentSchema), cardGrid: shapeKeys(CardGridContentSchema),
   table: shapeKeys(TableContentSchema), profile: shapeKeys(ProfileContentSchema), image: shapeKeys(ImageContentSchema),
   icon: shapeKeys(IconContentSchema), chart: shapeKeys(ChartContentSchema), pptxChart: shapeKeys(PptxChartContentSchema),
-  line: shapeKeys(LineContentSchema), timeline: shapeKeys(TimelineContentSchema),
+  line: shapeKeys(LineContentSchema), timeline: shapeKeys(TimelineContentSchema), callout: shapeKeys(CalloutContentSchema),
 };
 
 function isMeta(key: string): boolean { return key.startsWith("_") || key.startsWith("$"); }
@@ -565,10 +580,6 @@ function lintNode(node: any, path: string, depth: number, warnings: DeckIssue[],
   if (c && typeof c === "object" && typeof c.type === "string" && CONTENT_KEYS[c.type]) {
     for (const k of Object.keys(c)) {
       if (!CONTENT_KEYS[c.type].includes(k) && !isMeta(k)) warnings.push(unknownKey(k, CONTENT_KEYS[c.type], `${path}.content`));
-    }
-    if (c.type === "table" && c.data && Array.isArray(c.data.colWidths)) {
-      const sum = c.data.colWidths.reduce((a: number, b: number) => a + (Number(b) || 0), 0);
-      if (Math.abs(sum - 12) > 0.001) warnings.push({ path: `${path}.content.data.colWidths`, message: `colWidths sum to ${sum}, not 12`, fix: "colWidths are 12-column spans; make them add up to 12" });
     }
     if (c.type === "table" && c.data && Array.isArray(c.data.rows) && Array.isArray(c.data.headers) && c.data.headers.length) {
       const bad = c.data.rows.findIndex((r: any) => Array.isArray(r) && r.length !== c.data.headers.length);
@@ -613,6 +624,17 @@ function alignNumericColumns(data: any, path: string, note: (p: string, m: strin
   note(path, `numeric columns right-aligned (colAlign: ${JSON.stringify(colAlign)})`);
 }
 
+/** colWidths are relative spans; rescale them to sum to 12 so lint and budgets agree with rendering. */
+function rescaleColWidths(data: any, path: string, note: (p: string, m: string) => void): void {
+  if (!Array.isArray(data.colWidths) || data.colWidths.length === 0) return;
+  const nums = data.colWidths.map(Number);
+  if (nums.some((n: number) => !Number.isFinite(n) || n <= 0)) return;
+  const sum = nums.reduce((a: number, b: number) => a + b, 0);
+  if (Math.abs(sum - 12) < 0.001) return;
+  data.colWidths = nums.map((n: number) => Math.round((n / sum) * 12 * 100) / 100);
+  note(`${path}.colWidths`, `colWidths summed to ${Math.round(sum * 100) / 100}; rescaled to 12`);
+}
+
 export function normalizeDeck(input: unknown, notes: DeckIssue[] = []): unknown {
   if (!input || typeof input !== "object" || Array.isArray(input)) return input;
   const deck: any = JSON.parse(JSON.stringify(input));
@@ -635,6 +657,11 @@ export function normalizeDeck(input: unknown, notes: DeckIssue[] = []): unknown 
       }
       return c;
     }
+    if (c.type === "callout" && !c.text && !c.runs) {
+      const t = c.body ?? c.description ?? c.message ?? c.content;
+      if (typeof t === "string") { note(path, "callout body became text"); const { body: _b, description: _d, message: _m, content: _c, ...rest } = c; return { ...rest, text: t }; }
+      return c;
+    }
     if (c.type === "cardGrid" && Array.isArray(c.items)) {
       c.items = c.items.map((it: any, i: number) => {
         if (!it || typeof it !== "object") return it;
@@ -655,12 +682,14 @@ export function normalizeDeck(input: unknown, notes: DeckIssue[] = []): unknown 
       if (Array.isArray(h)) data.headers = h.map(String);
       for (const [k, v] of Object.entries({ colWidths, colAlign, align, rowHeight, headerHeight, fontSize, headerFontSize, summaryRows, verticalHeaders })) if (v !== undefined) data[k] = v;
       alignNumericColumns(data, `${path}.data`, note);
+      rescaleColWidths(data, `${path}.data`, note);
       return { ...rest, data };
     }
     if (c.type === "table" && c.data && Array.isArray(c.data.rows)) {
       if (Array.isArray(c.data.columns) && !c.data.headers) { c.data.headers = c.data.columns.map(String); delete c.data.columns; note(`${path}.data`, "columns became headers"); }
       c.data.rows = c.data.rows.map((r: any) => (Array.isArray(r) ? r.map((cell: any) => (cell != null && typeof cell !== "object" ? String(cell) : cell)) : r));
       alignNumericColumns(c.data, `${path}.data`, note);
+      rescaleColWidths(c.data, `${path}.data`, note);
       return c;
     }
     if (c.type === "statGrid" && Array.isArray(c.items)) {

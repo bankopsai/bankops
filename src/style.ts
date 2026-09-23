@@ -208,6 +208,18 @@ export const DEFAULT_STYLE = {
     sublabelItalic: false
   },
 
+  callout: {
+    fill: null,                   // null = light accent tint (#EEF3FA on light themes)
+    textColor: null,              // null = inherit from colors.primary
+    accentColor: null,            // bar color; null = inherit from colors.accent
+    titleColor: null,             // null = inherit from colors.accent
+    fontFamily: null,             // null = inherit from fonts.body
+    size: null,                   // pt; null = inherit from body.size
+    titleSize: null,              // pt; null = inherit from body.size
+    barWidth: 0.06,               // inches
+    padding: 0.12                 // inches
+  },
+
   cardGrid: {
     titleFontFamily: null,        // null = inherit from fonts.body
     titleSize: null,              // null = inherit from body.size
@@ -432,6 +444,17 @@ export class SlideStyle {
         sublabelBold: s.statGrid.sublabelBold,
         sublabelItalic: s.statGrid.sublabelItalic
       },
+      callout: {
+        fill: s.callout.fill || '#EEF3FA',
+        textColor: s.callout.textColor || primary,
+        accentColor: s.callout.accentColor || accent,
+        titleColor: s.callout.titleColor || accent,
+        font: s.callout.fontFamily || s.fonts.body,
+        fontSize: U.pointsToFontSize(s.callout.size || s.body.size),
+        titleSize: U.pointsToFontSize(s.callout.titleSize || s.body.size),
+        barWidth: Math.round(U.inchesToEmu(s.callout.barWidth != null ? s.callout.barWidth : 0.06)),
+        padding: Math.round(U.inchesToEmu(s.callout.padding != null ? s.callout.padding : 0.12))
+      },
       cardGrid: {
         titleFont: s.cardGrid.titleFontFamily || s.fonts.body,
         titleSize: s.cardGrid.titleSize != null ? U.pointsToFontSize(s.cardGrid.titleSize) : null,
@@ -486,7 +509,8 @@ export class SlideStyle {
         headerBarText: '#FFFFFF', cardFill: '#16213e'
       },
       fonts: { title: 'Arial Bold', body: 'Arial', label: 'Arial', dividerNumber: 'Arial' },
-      table: { evenRowFill: '#16213e', oddRowFill: '#1a1a2e', headerTextColor: '#FFFFFF', borderColor: '#33405c', summaryRowFill: '#243357', summaryRowTextColor: '#EAEAEA' }
+      table: { evenRowFill: '#16213e', oddRowFill: '#1a1a2e', headerTextColor: '#FFFFFF', borderColor: '#33405c', summaryRowFill: '#243357', summaryRowTextColor: '#EAEAEA' },
+      callout: { fill: '#243357' }
     },
   
     warm: {

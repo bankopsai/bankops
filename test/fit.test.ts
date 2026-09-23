@@ -37,3 +37,12 @@ test("a long title renders smaller and the body starts below it", async () => {
   const body = shapes.find((s: any) => s.name !== "Title" && s.textBody && s.textBody.paragraphs.some((p: any) => p.runs.some((x: any) => x.text === "body")));
   assert.ok(body.xfrm.off.y >= t.xfrm.off.y + t.xfrm.ext.cy, "body below title");
 });
+
+test("a callout renders as a panel, a bar and text", async () => {
+  const r = await renderDeck({ slides: [{ body: { content: { type: "callout", title: "Bottom line", text: "Agents that can reach, change and persist are the risk." } } }] });
+  const pres = await new PptxParser().parse(r.buffer);
+  const names = pres.slides[0].shapes.map((s: any) => s.name);
+  assert.ok(names.includes("Callout") && names.includes("Callout Bar"), names.join(","));
+  const textShape = pres.slides[0].shapes.find((s: any) => s.textBody && s.textBody.paragraphs.some((p: any) => p.runs.some((x: any) => /Bottom line/.test(x.text))));
+  assert.ok(textShape);
+});

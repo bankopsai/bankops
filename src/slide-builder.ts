@@ -1110,6 +1110,9 @@ class SlideBuilder {
       case 'timeline':
         this._renderTimeline(slide, bounds, content);
         break;
+      case 'callout':
+        this._renderCallout(slide, bounds, content);
+        break;
       case 'profile':
         this._renderProfile(slide, bounds, content);
         break;
@@ -1937,6 +1940,42 @@ class SlideBuilder {
     shape._chartIdx = chartIdx;
     shape._graphicFrameXml = result.graphicFrameXml ?? undefined;
     slide.shapes.push(shape);
+  }
+
+  // ---- Callout renderer: tinted panel + accent bar + optional title + text ----
+  _renderCallout(slide: any, bounds: Bounds, content: any) {
+    const s = this._style;
+    const co = s.callout || { fill: '#EEF3FA', textColor: s.palette.primaryText, accentColor: s.palette.accent, titleColor: s.palette.accent, font: s.bodyText.font, fontSize: s.bodyText.fontSize, titleSize: s.bodyText.fontSize, barWidth: 54864, padding: 109728 };
+
+    const panel = new DM.Shape();
+    panel.id = this._nextId();
+    panel.name = 'Callout';
+    panel.xfrm = { off: { x: bounds.x, y: bounds.y }, ext: { cx: bounds.cx, cy: bounds.cy }, rot: 0, flipH: false, flipV: false };
+    panel.geometry = { type: 'rect' };
+    panel.fill = new DM.Fill('solid', { color: content.background || co.fill });
+    slide.shapes.push(panel);
+
+    const bar = new DM.Shape();
+    bar.id = this._nextId();
+    bar.name = 'Callout Bar';
+    bar.xfrm = { off: { x: bounds.x, y: bounds.y }, ext: { cx: co.barWidth, cy: bounds.cy }, rot: 0, flipH: false, flipV: false };
+    bar.geometry = { type: 'rect' };
+    bar.fill = new DM.Fill('solid', { color: content.accentColor || co.accentColor });
+    slide.shapes.push(bar);
+
+    const runs: any[] = [];
+    if (content.title) runs.push({ text: content.title + '\n', bold: true, color: content.accentColor || co.titleColor, fontSize: co.titleSize });
+    if (Array.isArray(content.runs) && content.runs.length) runs.push(...content.runs);
+    else runs.push({ text: String(content.text || '') });
+    const inset = { x: bounds.x + co.barWidth + co.padding, y: bounds.y, cx: Math.max(0, bounds.cx - co.barWidth - 2 * co.padding), cy: bounds.cy };
+    this._renderRichTextBlock(slide, inset, {
+      type: 'text', runs,
+      font: content.font || co.font,
+      fontSize: content.fontSize || co.fontSize,
+      color: content.color || co.textColor,
+      align: content.align || 'l',
+      anchor: content.anchor || 'ctr',
+    });
   }
 
   // ---- Timeline content renderer ----

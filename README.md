@@ -38,7 +38,7 @@ await renderPptxToFile({
 ## What you get
 
 - **A 12-column grid layout engine.** Slides are trees of nodes with `span`, `direction`, `gap`, `padding`, header bars and subheaders. The same engine drives the PPTX and any preview.
-- **Eleven content types.** `text` (rich runs, bullets), `statGrid`, `cardGrid`, `table`, `profile`, `image`, `icon`, `chart` (bar, line, pie, combo, waterfall, scatter, gauge), `pptxChart` (native, editable Excel-backed charts), `line`, `timeline`.
+- **Twelve content types.** `text` (rich runs, bullets), `statGrid`, `cardGrid`, `table`, `profile`, `image`, `icon`, `chart` (bar, line, pie, combo, waterfall, scatter, gauge), `pptxChart` (native, editable Excel-backed charts), `callout` (key-takeaway box), `line`, `timeline`.
 - **Style presets and a brand cascade.** `corporate` (the IB house look), `minimal`, `dark`, `warm`, or your own tokens. Theme tokens sit under `deck.style` so an organization's brand applies to every deck.
 - **Text budgets.** `annotateDeck()` tells an agent how many characters fit in every zone before it writes copy, so nothing overflows.
 - **Validation that teaches.** `validateDeck()` returns JSON paths, messages and a fix for each problem, and warns about typos and spans that do not add up.
